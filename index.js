@@ -1,3 +1,9 @@
+//--------------------
+// TRADING APP 
+//--------------------
+
+
+
 const fs                = require('fs');
 const { Client }        = require('pg');
 const yahooFinance      = require('yahoo-finance2').default;
