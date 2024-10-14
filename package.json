@@ -1,0 +1,16 @@
+{
+  "name": "tradingapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pg": "^8.13.0",
+    "uuid": "^10.0.0",
+    "yahoo-finance2": "^2.13.2"
+  }
+}
