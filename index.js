@@ -9,7 +9,7 @@ const { Client }        = require('pg');
 const yahooFinance      = require('yahoo-finance2').default;
 const config            = JSON.parse(fs.readFileSync('config.json', 'utf8'));
 let postgresConnected   = false
-let stockList           = [ "BEN", "O", "TROW", "AMCR", "CVX", "FRT", "KVUE", "SJM", "HRL", "KMB", "IBM", "ESS", "ADM", "ED", "SWK", "XOM", "CLX", "ABBV", "MDT", "PEP", "JNJ", "TGT", "GPC", "KO", "SYY", "NEE", "APD", "ATO", "CINF", "CHRW", "ITW", "PG", "MCD", "PPG", "MMM", "MKC", "ADP", "EMR", "ABT", "GD", "BF.B", "CL", "AFL", "CAH", "LOW", "ALB", "BDX", "CAT", "AOS", "NUE", "CB", "NDSN", "EXPD", "LIN", "DOV", "CHD", "WMT", "PNR", "ECL", "GWW", "SHW", "CTAS", "SPGI", "ROP", "BRO", "WST" ]
+let stockList           = [ /*"BEN", "O", "TROW", "AMCR", "CVX", "FRT", "KVUE", "SJM", "HRL", "KMB", "IBM", "ESS", "ADM", "ED", "SWK", "XOM", "CLX", "ABBV", "MDT", "PEP", "JNJ", "TGT", "GPC", "KO", "SYY", "NEE", "APD", "ATO", */ "CINF", "CHRW", "ITW", "PG", "MCD", "PPG", "MMM", "MKC", "ADP", "EMR", "ABT", "GD", "BF.B", "CL", "AFL", "CAH", "LOW", "ALB", "BDX", "CAT", "AOS", "NUE", "CB", "NDSN", "EXPD", "LIN", "DOV", "CHD", "WMT", "PNR", "ECL", "GWW", "SHW", "CTAS", "SPGI", "ROP", "BRO", "WST" ]
 let prices
 let client              = null
 
@@ -46,12 +46,16 @@ async function main() {
                         await connectDb()
         
                     }
-                            let exists = await client.query("select  id  from  source_yahoo_finance_daily_stock_data  where  symbol = $1  and stock_date = $2",
+                    console.error('1');
+                    let exists = await client.query("select  id  from  source_yahoo_finance_daily_stock_data  where  symbol = $1  and stock_date = $2",
                         [stock,price.date])
-                    if (exists.rowCount == 0) {
-                        await client.query("insert into source_yahoo_finance_daily_stock_data (id,symbol,stock_date,stock_adj_close,stock_volume,stock_open,stock_close,stock_high,stock_low) values ($1,$2,$3,$4,$5,$6,$7,$8,$9)",
+                        console.error('2');
+                        if (exists.rowCount == 0) {
+                            console.error('3');
+                            await client.query("insert into source_yahoo_finance_daily_stock_data (id,symbol,stock_date,stock_adj_close,stock_volume,stock_open,stock_close,stock_high,stock_low) values ($1,$2,$3,$4,$5,$6,$7,$8,$9)",
                             [uuidv4(),stock,price.date, price.adjClose, price.volume, price.open, price.close,  price.high, price.low])
-                    }
+                            console.error('4');
+                        }
                     
                 } catch (error) {
                     console.error(error);
