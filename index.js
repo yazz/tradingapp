@@ -9,7 +9,7 @@ const { Client }        = require('pg');
 const yahooFinance      = require('yahoo-finance2').default;
 const config            = JSON.parse(fs.readFileSync('config.json', 'utf8'));
 let postgresConnected   = false
-let stockList           = [ /*"BEN", "O", "TROW", "AMCR", "CVX", "FRT", "KVUE", "SJM", "HRL", "KMB", "IBM", "ESS", "ADM", "ED", "SWK", "XOM", "CLX", "ABBV", "MDT", "PEP", "JNJ", "TGT", "GPC", "KO", "SYY", "NEE", "APD", "ATO",  "CINF", "CHRW", "ITW", "PG", "MCD", "PPG", "MMM", "MKC", "ADP", "EMR", "ABT", */"GD", "BF.B", "CL", "AFL", "CAH", "LOW", "ALB", "BDX", "CAT", "AOS", "NUE", "CB", "NDSN", "EXPD", "LIN", "DOV", "CHD", "WMT", "PNR", "ECL", "GWW", "SHW", "CTAS", "SPGI", "ROP", "BRO", "WST" ]
+let stockList           = [ /*"BEN", "O", "TROW", "AMCR", "CVX", "FRT", "KVUE", "SJM", "HRL", "KMB", "IBM", "ESS", "ADM", "ED", "SWK", "XOM", "CLX", "ABBV", "MDT", "PEP", "JNJ", "TGT", "GPC", "KO", "SYY", "NEE", "APD", "ATO",  "CINF", "CHRW", "ITW", "PG", "MCD", "PPG", "MMM", "MKC", "ADP", "EMR", "ABT", "GD", "BF.B",*/ "CL", "AFL", "CAH", "LOW", "ALB", "BDX", "CAT", "AOS", "NUE", "CB", "NDSN", "EXPD", "LIN", "DOV", "CHD", "WMT", "PNR", "ECL", "GWW", "SHW", "CTAS", "SPGI", "ROP", "BRO", "WST" ]
 let prices
 let client              = null
 
@@ -47,6 +47,14 @@ async function main() {
         
                     }
                     console.error('1');
+                    const memoryUsage = process.memoryUsage();
+
+                    console.log('Memory Usage:');
+                    console.log(`- RSS: ${(memoryUsage.rss / 1024 / 1024).toFixed(2)} MB`);
+                    console.log(`- Heap Total: ${(memoryUsage.heapTotal / 1024 / 1024).toFixed(2)} MB`);
+                    console.log(`- Heap Used: ${(memoryUsage.heapUsed / 1024 / 1024).toFixed(2)} MB`);
+                    console.log(`- External: ${(memoryUsage.external / 1024 / 1024).toFixed(2)} MB`);
+
                     let exists = await client.query("select  id  from  source_yahoo_finance_daily_stock_data  where  symbol = $1  and stock_date = $2",
                         [stock,price.date])
                         console.error('2');
