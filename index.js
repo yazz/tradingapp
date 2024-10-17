@@ -9,7 +9,8 @@ const { Client }        = require('pg');
 const yahooFinance      = require('yahoo-finance2').default;
 const config            = JSON.parse(fs.readFileSync('config.json', 'utf8'));
 let postgresConnected   = false
-let stockList           = [ "BEN", "O", "TROW", "AMCR", "CVX", "FRT", "KVUE", "SJM", "HRL", "KMB", "IBM", "ESS", "ADM", "ED", "SWK", "XOM", "CLX", 
+let stockList           = [ "BTC-USD", "ADA-USD" , "ETH-USD" , "DOT-USD" , "SOL-USD" ,
+                            "BEN", "O", "TROW", "AMCR", "CVX", "FRT", "KVUE", "SJM", "HRL", "KMB", "IBM", "ESS", "ADM", "ED", "SWK", "XOM", "CLX", 
                             "ABBV", "MDT", "PEP", "JNJ", "TGT", "GPC", "KO", "SYY", "NEE", "APD",
                             "ATO",  "CINF", "CHRW", "ITW", "PG", "MCD", "PPG", "MMM", "MKC", "ADP", "EMR", "ABT", "GD", "BF.B", 
                             "CL", "AFL", "CAH", "LOW", "ALB", "BDX", "CAT", "AOS", "NUE", "CB", "NDSN", "EXPD", "LIN", "DOV", "CHD", 
