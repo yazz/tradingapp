@@ -6,4 +6,4 @@ sleep 2
 /usr/local/Cellar/postgresql@17/17.0_1/bin/psql -U postgres -c "CREATE DATABASE tradingdb;" 
 echo "Sleeping for 10 seconds..."
 sleep 2
-/usr/local/Cellar/postgresql@17/17.0_1/bin/psql -U postgres -c tradingdb -f ./tradingdb_backup.sql
+/usr/local/Cellar/postgresql@17/17.0_1/bin/psql -U postgres -d tradingdb -f ./tradingdb_backup.sql
