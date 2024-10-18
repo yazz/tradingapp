@@ -1,11 +1,8 @@
 //---------------------------------
 // TRADING APP TRADING SIMULATION
 //---------------------
-
-
 const fs                = require('fs');
 const { Client }        = require('pg');
-const yahooFinance      = require('yahoo-finance2').default;
 const config            = JSON.parse(fs.readFileSync('config.json', 'utf8'));
 let postgresConnected   = false
 let stockList           = [ "BEN", "O", "TROW", "AMCR", "CVX", "FRT", "KVUE", "SJM", "HRL", "KMB", "IBM", "ESS", "ADM", "ED", "SWK", "XOM", "CLX", 
@@ -23,19 +20,24 @@ function              uuidv4      (  ) {
         return v.toString(16);
     });
 }
-async function getHistoricalStockPrices(symbol, startDate, endDate) {
-    try {
-        // Fetch historical prices
-        const queryOptions = { period1: startDate, period2: endDate };  // Dates in YYYY-MM-DD format
-        const result = await yahooFinance.historical(symbol, queryOptions);
-
-        return result;
-    } catch (error) {
-        console.error(error);
-    }
-}
 
 async function main() {
+    let date = new Date("2020-01-01")
+    console.log(date)
+
+    let startBalance = 100000
+    let balance = startBalance
+    let shares = 0
+    let sharesPrice = 0
+    let sharesCost = 0
+    let sharesValue = 0
+    let sharesProfit = 0
+    let sharesProfitPercent = 0
+    
+    while (date < new Date("2024-01-01")) {
+        console.log(date)
+        date.setDate(date.getDate() + 1)
+    }
 }
     
 
@@ -88,4 +90,5 @@ function delay(ms) {
     await connectDb()
     await main()
     console.log('Trading done');
+    process.exit(0)
 })()
