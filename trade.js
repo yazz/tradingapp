@@ -33,10 +33,23 @@ async function main() {
     let sharesValue = 0
     let sharesProfit = 0
     let sharesProfitPercent = 0
+
+    let currentPositions = {}
     
     while (date < new Date("2024-01-01")) {
         console.log(date)
         date.setDate(date.getDate() + 1)
+        let chooseStockRandomly = Math.floor(Math.random() * stockList.length)
+        let RandomStock = stockList[chooseStockRandomly]
+        let stockPrice = await client.query("select * from source_yahoo_finance_daily_stock_data where symbol = $1 and stock_date = $2",
+                            [RandomStock   ,  date])
+        if (stockPrice.rowCount == 0) {
+            //console.log("No data for " + RandomStock + " on " + date)
+            continue
+        } else {
+            let price = stockPrice.rows[0]
+            console.log(RandomStock + ": $" + price.stock_adj_close)
+        }
     }
 }
     
