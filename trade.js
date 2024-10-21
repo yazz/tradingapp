@@ -51,6 +51,7 @@ async function main() {
                 if ((price.stock_open > 0) && (cashBalance - price.stock_open) > 0) {
                     if (currentPositions[RandomStock] == undefined) {
                         currentPositions[RandomStock] = {
+                            symbol: RandomStock,
                             shares: 0,
                             cost: 0
                         }
@@ -64,7 +65,19 @@ async function main() {
         }
 
         for (let stock in currentPositions) {
+            console.log(stock   ,  date)
+            let stockPrice = await client.query("select * from source_yahoo_finance_daily_stock_data where symbol = $1 and stock_date = $2",
+                [stock   ,  date])
             console.log(stock + ": " + currentPositions[stock].shares + " shares at $" + currentPositions[stock].cost.toFixed(2))
+            if (stockPrice.rowCount > 0) {
+                let price = stockPrice.rows[0]
+                let StockValue = price.stock_open * currentPositions[stock].shares
+
+                if (StockValue > currentPositions[stock].shares) {
+                    console.log(stock + " SELLfor profit $" + StockValue)
+                }
+            }
+
         }
     }
 }
