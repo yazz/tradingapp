@@ -48,20 +48,23 @@ async function main() {
                 continue
             } else {
                 let price = stockPrice.rows[0]
-                if (cashBalance - price.stock_open > 0) {
-                        if (currentPositions[RandomStock] == undefined) {
+                if ((price.stock_open > 0) && (cashBalance - price.stock_open) > 0) {
+                    if (currentPositions[RandomStock] == undefined) {
                         currentPositions[RandomStock] = {
                             shares: 0,
                             cost: 0
                         }
-                    } else {
-                        currentPositions[RandomStock].shares ++
-                        currentPositions[RandomStock].cost += price.stock_open
-                        cashBalance -= price.stock_open
                     }
-                    console.log(date.toDateString() + " " + RandomStock + ": $" + price.stock_open + " ---- " + cashBalance)
+                    currentPositions[RandomStock].shares ++
+                    currentPositions[RandomStock].cost += parseFloat(price.stock_open)
+                    cashBalance -= parseInt(price.stock_open)
+                    console.log(date.toDateString() + " BUY " + RandomStock + ": $" + price.stock_open + " ---- " + cashBalance)
                 }
             }
+        }
+
+        for (let stock in currentPositions) {
+            console.log(stock + ": " + currentPositions[stock].shares + " shares at $" + currentPositions[stock].cost.toFixed(2))
         }
     }
 }
