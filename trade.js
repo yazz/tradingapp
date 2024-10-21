@@ -25,8 +25,8 @@ async function main() {
     let date = new Date("2020-01-01")
     console.log(date)
 
-    let startBalance = 100000
-    let balance = startBalance
+    let startCashBalance = 100000
+    let cashBalance = startCashBalance
     let shares = 0
     let sharesPrice = 0
     let sharesCost = 0
@@ -37,18 +37,31 @@ async function main() {
     let currentPositions = {}
     
     while (date < new Date("2024-01-01")) {
-        console.log(date)
         date.setDate(date.getDate() + 1)
         let chooseStockRandomly = Math.floor(Math.random() * stockList.length)
-        let RandomStock = stockList[chooseStockRandomly]
-        let stockPrice = await client.query("select * from source_yahoo_finance_daily_stock_data where symbol = $1 and stock_date = $2",
-                            [RandomStock   ,  date])
-        if (stockPrice.rowCount == 0) {
-            //console.log("No data for " + RandomStock + " on " + date)
-            continue
-        } else {
-            let price = stockPrice.rows[0]
-            console.log(RandomStock + ": $" + price.stock_adj_close)
+        if (cashBalance > 0) {
+            let RandomStock = stockList[chooseStockRandomly]
+            let stockPrice = await client.query("select * from source_yahoo_finance_daily_stock_data where symbol = $1 and stock_date = $2",
+                                [RandomStock   ,  date])
+            if (stockPrice.rowCount == 0) {
+                //console.log("No data for " + RandomStock + " on " + date)
+                continue
+            } else {
+                let price = stockPrice.rows[0]
+                if (cashBalance - price.stock_open > 0) {
+                        if (currentPositions[RandomStock] == undefined) {
+                        currentPositions[RandomStock] = {
+                            shares: 0,
+                            cost: 0
+                        }
+                    } else {
+                        currentPositions[RandomStock].shares ++
+                        currentPositions[RandomStock].cost += price.stock_open
+                        cashBalance -= price.stock_open
+                    }
+                    console.log(date.toDateString() + " " + RandomStock + ": $" + price.stock_open + " ---- " + cashBalance)
+                }
+            }
         }
     }
 }
