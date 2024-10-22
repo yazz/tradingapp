@@ -83,13 +83,16 @@ async function main() {
             console.log(stock   ,  date)
             let stockPrice = await client.query("select * from source_yahoo_finance_daily_stock_data where symbol = $1 and stock_date = $2",
                 [stock   ,  date])
-            console.log(stock + ": " + currentPositions[stock].shares + " shares at $" + currentPositions[stock].cost.toFixed(2))
             if (stockPrice.rowCount > 0) {
+                console.log(stock + ": " + currentPositions[stock].shares + " shares at $" + currentPositions[stock].cost.toFixed(4))
                 let price = stockPrice.rows[0]
                 let StockValue = price.stock_open * currentPositions[stock].shares
 
                 if (StockValue > currentPositions[stock].shares) {
-                    console.log(stock + " SELL for profit $" + StockValue)
+                    console.log(stock + " SELL for profit $" + StockValue - currentPositions[stock].cost)
+                    currentPositions[stock].shares = 0
+                    currentPositions[stock].cost = 0
+                    cashBalance = cashBalance + StockValue
                 }
             }
 
