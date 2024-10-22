@@ -28,14 +28,49 @@ let stockBalance        = 0
 let totalBalance        = 0
 
 
-function              uuidv4      (  ) {
+function                uuidv4      (  ) {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
     });
 }
-
-async function main() {
+async function          connectDb   (  ) {
+    let promise = new Promise((resolve, reject) => {
+        client = new Client({
+            user: config.postgres.user,     // PostgreSQL username
+            host: config.postgres.host,         // Server hosting the PostgreSQL database
+            database: config.postgres.database, // Database name
+            password: config.postgres.password, // Password for the PostgreSQL user
+            port: parseInt(config.postgres.port),                // PostgreSQL port (default is 5432)
+        });
+        client.connect()
+            .then(async function() {
+                console.log('Connected to PostgreSQL');
+                postgresConnected = true
+                client.on('error', (err) => {
+                    console.error('Lost connection to PostgreSQL:', err.stack);
+                    postgresConnected = false
+                    // Optionally, try reconnecting or take other actions
+                });
+            })
+            .then(result => {
+            })
+            .catch(err => {
+                console.error('Error connecting to PostgreSQL or running query:', err);
+                process.exit(1)
+            })
+            .finally(() => {
+                // Close the connection
+                //client.end();
+                resolve()
+            });
+    });
+    return promise
+}
+function                delay       (  ms  ) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+async function          main        (  ) {
     console.log("Starting date: " + date)
 
     while (date < new Date("2024-01-01")) {
@@ -99,52 +134,6 @@ async function main() {
         }
     }
 }
-    
-
-
-
-// Define the connection details
-
-async function connectDb() {
-    let promise = new Promise((resolve, reject) => {
-        client = new Client({
-            user: config.postgres.user,     // PostgreSQL username
-            host: config.postgres.host,         // Server hosting the PostgreSQL database
-            database: config.postgres.database, // Database name
-            password: config.postgres.password, // Password for the PostgreSQL user
-            port: parseInt(config.postgres.port),                // PostgreSQL port (default is 5432)
-        });
-        client.connect()
-        .then(async function() {
-            console.log('Connected to PostgreSQL');
-            postgresConnected = true
-            client.on('error', (err) => {
-                console.error('Lost connection to PostgreSQL:', err.stack);
-                postgresConnected = false
-                // Optionally, try reconnecting or take other actions
-            });
-            })
-        .then(result => {
-        })
-        .catch(err => {
-            console.error('Error connecting to PostgreSQL or running query:', err);
-            process.exit(1)
-        })
-        .finally(() => {
-            // Close the connection
-            //client.end();
-            resolve()
-        });
-    });
-    return promise
-}   
-
-function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
- }
-  
-
-
 
 (async function() {
     await connectDb()
