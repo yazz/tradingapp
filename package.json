@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "blessed": "^0.1.81",
+    "blessed-contrib": "^4.11.0",
     "pg": "^8.13.0",
     "uuid": "^10.0.0",
     "yahoo-finance2": "^2.13.2"
