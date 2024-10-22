@@ -45,10 +45,10 @@ box.key('enter', function(ch, key) {
 // Create a box perfectly centered horizontally and vertically.
 var box2 = blessed.box({
     top: 'bottom',
-    right: 'right',
+    right: '0',
     width: '50%',
     height: '50%',
-    content: "Zubair's {bold}Trading system{/bold}!",
+    content: "Positions",
     tags: true,
     border: {
         type: 'line'
@@ -65,6 +65,65 @@ var box2 = blessed.box({
     }
 });
 screen.append(box2);
+
+
+
+
+
+// Create a box perfectly centered horizontally and vertically.
+var box2 = blessed.box({
+    bottom: '0',
+    right: '0',
+    width: '50%',
+    height: '50%',
+    content: "Trades",
+    tags: true,
+    border: {
+        type: 'line'
+    },
+    style: {
+        fg: 'white',
+        bg: 'magenta',
+        border: {
+            fg: '#f0f0f0'
+        },
+        hover: {
+            bg: 'green'
+        }
+    }
+});
+screen.append(box2);
+
+
+
+
+
+
+
+// Create a box perfectly centered horizontally and vertically.
+var box3 = blessed.box({
+    bottom: '0',
+    left: '0',
+    width: '50%',
+    height: '50%',
+    content: "Other",
+    tags: true,
+    border: {
+        type: 'line'
+    },
+    style: {
+        fg: 'white',
+        bg: 'magenta',
+        border: {
+            fg: '#f0f0f0'
+        },
+        hover: {
+            bg: 'green'
+        }
+    }
+});
+screen.append(box3);
+
 
 
 
