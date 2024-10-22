@@ -1,8 +1,10 @@
 //---------------------------------
 // TRADING APP TRADING SIMULATION
 //---------------------
+
 const fs                = require('fs');
 const { Client }        = require('pg');
+
 const config            = JSON.parse(fs.readFileSync('config.json', 'utf8'));
 let postgresConnected   = false
 let stockList           = [ "BEN", "O", "TROW", "AMCR", "CVX", "FRT", "KVUE", "SJM", "HRL", "KMB", "IBM", "ESS", "ADM", "ED", "SWK", "XOM", "CLX", 
@@ -12,6 +14,18 @@ let stockList           = [ "BEN", "O", "TROW", "AMCR", "CVX", "FRT", "KVUE", "S
                             "WMT", "PNR", "ECL", "GWW", "SHW", "CTAS", "SPGI", "ROP", "BRO", "WST" ]
 let prices
 let client              = null
+let date                = new Date("2020-01-01")
+let startCashBalance    = 100000
+let cashBalance         = startCashBalance
+let shares              = 0
+let sharesPrice         = 0
+let sharesCost          = 0
+let sharesValue         = 0
+let sharesProfit        = 0
+let sharesProfitPercent = 0
+let currentPositions    = {}
+let stockBalance        = 0
+let totalBalance        = 0
 
 
 function              uuidv4      (  ) {
@@ -22,21 +36,7 @@ function              uuidv4      (  ) {
 }
 
 async function main() {
-    let date = new Date("2020-01-01")
-    console.log(date)
-
-    let startCashBalance = 100000
-    let cashBalance = startCashBalance
-    let shares = 0
-    let sharesPrice = 0
-    let sharesCost = 0
-    let sharesValue = 0
-    let sharesProfit = 0
-    let sharesProfitPercent = 0
-
-    let currentPositions = {}
-    let stockBalance = 0
-    let totalBalance = 0
+    console.log("Starting date: " + date)
 
     while (date < new Date("2024-01-01")) {
         date.setDate(date.getDate() + 1)
