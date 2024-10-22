@@ -35,7 +35,9 @@ async function main() {
     let sharesProfitPercent = 0
 
     let currentPositions = {}
-    
+    let stockBalance = 0
+    let totalBalance = 0
+
     while (date < new Date("2024-01-01")) {
         date.setDate(date.getDate() + 1)
         let chooseStockRandomly = Math.floor(Math.random() * stockList.length)
@@ -49,6 +51,19 @@ async function main() {
             } else {
                 let price = stockPrice.rows[0]
                 if ((price.stock_open > 0) && (cashBalance - price.stock_open) > 0) {
+                    for (let stock in currentPositions) {
+                        let stockPrice = await client.query("select * from source_yahoo_finance_daily_stock_data where symbol = $1 and stock_date = $2",
+                            [stock   ,  date])
+                        if (stockPrice.rowCount > 0) {
+                            let price = stockPrice.rows[0]
+                            let StockValue = price.stock_open * currentPositions[stock].shares
+                            stockBalance = stockBalance + StockValue
+                        }
+                    }
+
+                    totalBalance = cashBalance + stockBalance
+
+
                     if (currentPositions[RandomStock] == undefined) {
                         currentPositions[RandomStock] = {
                             symbol: RandomStock,
@@ -59,7 +74,7 @@ async function main() {
                     currentPositions[RandomStock].shares ++
                     currentPositions[RandomStock].cost += parseFloat(price.stock_open)
                     cashBalance -= parseInt(price.stock_open)
-                    console.log(date.toDateString() + " BUY " + RandomStock + ": $" + price.stock_open + " ---- " + cashBalance)
+                    console.log(date.toDateString() + " BUY " + RandomStock + ": $" + price.stock_open + " ---- Cash $" + cashBalance + ", Stock $" + stockBalance + ", " + " = $" + totalBalance)
                 }
             }
         }
@@ -74,7 +89,7 @@ async function main() {
                 let StockValue = price.stock_open * currentPositions[stock].shares
 
                 if (StockValue > currentPositions[stock].shares) {
-                    console.log(stock + " SELLfor profit $" + StockValue)
+                    console.log(stock + " SELL for profit $" + StockValue)
                 }
             }
 
