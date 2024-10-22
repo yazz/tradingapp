@@ -52,8 +52,8 @@ const button = blessed.button({
         left: 2,
         right: 2,
     },
-    left: 'center',
-    top: 5,  // Position within the box
+    left: 0,
+    bottom: 0,  // Position within the box
     name: 'submit',
     content: 'Click me!',
     style: {
@@ -63,17 +63,43 @@ const button = blessed.button({
             bg: 'green',
         },
         hover: {
-            bg: 'red',
+            bg: 'green',
         },
     },
 });
 
 // Button click event
-button.on('press', function () {
+button.on('click', function () {
     box.setContent('Button was clicked!');
     screen.render(); // Re-render the screen to show changes
 });
 
+
+// Create a button
+const button2 = blessed.button({
+    parent: box,  // Attach button to the box
+    mouse: true,
+    keys: true,
+    shrink: true,
+    padding: {
+        left: 2,
+        right: 2,
+    },
+    left: 15,
+    bottom: 0,  // Position within the box
+    name: 'submit',
+    content: '2ns!',
+    style: {
+        bg: 'blue',
+        fg: 'white',
+        focus: {
+            bg: 'green',
+        },
+        hover: {
+            bg: 'green',
+        },
+    },
+});
 
 
 // Create a box perfectly centered horizontally and vertically.
