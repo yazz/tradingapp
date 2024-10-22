@@ -184,7 +184,28 @@ var box3 = blessed.box({
 });
 screen.append(box3);
 
-
+// Create a listtable widget
+const table = blessed.listtable({
+    parent: box3,
+    top: 'center',
+    left: 'center',
+    width: '80%',
+    height: '50%',
+    border: { type: 'line' },
+    align: 'center', // Align text in the cells
+    style: {
+        header: { fg: 'blue', bold: true },
+        cell: { fg: 'white', selected: { bg: 'blue' } },
+    },
+    keys: true, // Allows navigation using arrow keys
+    mouse: true, // Allows interaction using the mouse
+    data: [
+        ['ID', 'Name', 'Country'], // Headers
+        ['1', 'John Doe', 'USA'],  // Row 1
+        ['2', 'Jane Smith', 'Canada'], // Row 2
+        ['3', 'Foo Bar', 'UK'],    // Row 3
+    ],
+});
 
 
 
