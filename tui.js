@@ -42,6 +42,40 @@ box.key('enter', function(ch, key) {
 
 
 
+// Create a button
+const button = blessed.button({
+    parent: box,  // Attach button to the box
+    mouse: true,
+    keys: true,
+    shrink: true,
+    padding: {
+        left: 2,
+        right: 2,
+    },
+    left: 'center',
+    top: 5,  // Position within the box
+    name: 'submit',
+    content: 'Click me!',
+    style: {
+        bg: 'blue',
+        fg: 'white',
+        focus: {
+            bg: 'green',
+        },
+        hover: {
+            bg: 'red',
+        },
+    },
+});
+
+// Button click event
+button.on('press', function () {
+    box.setContent('Button was clicked!');
+    screen.render(); // Re-render the screen to show changes
+});
+
+
+
 // Create a box perfectly centered horizontally and vertically.
 var box2 = blessed.box({
     top: 'bottom',
