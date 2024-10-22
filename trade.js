@@ -51,6 +51,7 @@ async function main() {
             } else {
                 let price = stockPrice.rows[0]
                 if ((price.stock_open > 0) && (cashBalance - price.stock_open) > 0) {
+                    let stockBalance = 0
                     for (let stock in currentPositions) {
                         let stockPrice = await client.query("select * from source_yahoo_finance_daily_stock_data where symbol = $1 and stock_date = $2",
                             [stock   ,  date])
@@ -60,15 +61,14 @@ async function main() {
                             stockBalance = stockBalance + StockValue
                         }
                     }
-
                     totalBalance = cashBalance + stockBalance
 
 
                     if (currentPositions[RandomStock] == undefined) {
                         currentPositions[RandomStock] = {
-                            symbol: RandomStock,
-                            shares: 0,
-                            cost: 0
+                            symbol:     RandomStock,
+                            shares:     0,
+                            cost:       0
                         }
                     }
                     currentPositions[RandomStock].shares ++
