@@ -35,8 +35,9 @@ function                uuidv4      (  ) {
     });
 }
 async function          connectDb   (  ) {
+    let client = null
     let promise = new Promise((resolve, reject) => {
-        client = new Client({
+        let client = new Client({
             user: config.postgres.user,     // PostgreSQL username
             host: config.postgres.host,         // Server hosting the PostgreSQL database
             database: config.postgres.database, // Database name
@@ -62,10 +63,11 @@ async function          connectDb   (  ) {
             .finally(() => {
                 // Close the connection
                 //client.end();
-                resolve()
+                resolve(client)
             });
     });
-    return promise
+    client = await promise
+    return client
 }
 function                delay       (  ms  ) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -136,7 +138,7 @@ async function          main        (  ) {
 }
 
 (async function() {
-    await connectDb()
+    client = await connectDb()
     await main()
     console.log('Trading done');
     process.exit(0)
