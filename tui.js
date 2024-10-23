@@ -1,4 +1,5 @@
 var blessed = require('blessed');
+let tr = require('./helpers.js')
 
 // Create a screen object.
 var screen = blessed.screen({
@@ -31,11 +32,11 @@ var box = blessed.box({
 });
 screen.append(box);
 box.on('click', function(data) {
-    box.setContent('Started');
+    box.setContent(tr.helpers.getDemoText());
     screen.render();
 });
 box.key('enter', function(ch, key) {
-    box.setContent('Started');
+    box.setContent(tr.helpers.getDemoText());
     screen.render();
 });
 

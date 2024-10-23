@@ -4,3 +4,4 @@ package-lock.json
 config.json
 trader
 *.sql
+bun.lockb
