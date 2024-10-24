@@ -24,6 +24,9 @@ module.exports = {
         }
     },
     helpers: {
+        delay: function (ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        },  
         getDemoText: function() {
             return "Some demo text"
         },
