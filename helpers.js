@@ -1,13 +1,27 @@
 const fs                = require('fs');
 const { Client }        = require('pg');
-
+const yahooFinance      = require('yahoo-finance2').default;
 module.exports = {
     data: {
-        stockList: [ "BEN", "O", "TROW", "AMCR", "CVX", "FRT", "KVUE", "SJM", "HRL", "KMB", "IBM", "ESS", "ADM", "ED", "SWK", "XOM", "CLX", 
+        stockList: [ "BTC-USD", "ADA-USD" , "ETH-USD" , "DOT-USD" , "SOL-USD" ,
+            "BEN", "O", "TROW", "AMCR", "CVX", "FRT", "KVUE", "SJM", "HRL", "KMB", "IBM", "ESS", "ADM", "ED", "SWK", "XOM", "CLX", 
             "ABBV", "MDT", "PEP", "JNJ", "TGT", "GPC", "KO", "SYY", "NEE", "APD",
             "ATO",  "CINF", "CHRW", "ITW", "PG", "MCD", "PPG", "MMM", "MKC", "ADP", "EMR", "ABT", "GD", "BF.B", 
             "CL", "AFL", "CAH", "LOW", "ALB", "BDX", "CAT", "AOS", "NUE", "CB", "NDSN", "EXPD", "LIN", "DOV", "CHD", 
             "WMT", "PNR", "ECL", "GWW", "SHW", "CTAS", "SPGI", "ROP", "BRO", "WST" ]
+    },
+    trade: {
+        getHistoricalStockPrices: async function (symbol, startDate, endDate) {
+            try {
+                // Fetch historical prices
+                const queryOptions = { period1: startDate, period2: endDate };  // Dates in YYYY-MM-DD format
+                const result = await yahooFinance.historical(symbol, queryOptions);
+        
+                return result;
+            } catch (error) {
+                console.error(error);
+            }
+        }
     },
     helpers: {
         getDemoText: function() {

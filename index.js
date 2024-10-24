@@ -3,39 +3,22 @@
 //--------------------
 
 
-let tr = require('./helpers.js')
+let tr                  = require('./helpers.js')
 const fs                = require('fs');
 const { Client }        = require('pg');
 const yahooFinance      = require('yahoo-finance2').default;
 const config            = JSON.parse(fs.readFileSync('config.json', 'utf8'));
 let postgresConnected   = false
-let stockList           = [ "BTC-USD", "ADA-USD" , "ETH-USD" , "DOT-USD" , "SOL-USD" ,
-                            /*"BEN", "O", "TROW", "AMCR", "CVX", "FRT", "KVUE", "SJM", "HRL", "KMB", "IBM", "ESS", "ADM", "ED", "SWK", "XOM", "CLX", 
-                            "ABBV", "MDT", "PEP", "JNJ", "TGT", "GPC", "KO", "SYY", "NEE", "APD",
-                            "ATO",  "CINF", "CHRW", "ITW", "PG", "MCD", "PPG", "MMM", "MKC", "ADP", "EMR", "ABT", "GD", "BF.B", 
-                            "CL", "AFL", "CAH", "LOW", "ALB", "BDX", "CAT", "AOS", "NUE", "CB", */"NDSN", "EXPD", "LIN", "DOV", "CHD", 
-                            "WMT", "PNR", "ECL", "GWW", "SHW", "CTAS", "SPGI", "ROP", "BRO", "WST" ]
+let stockList           = tr.data.stockList
 let prices
 let client              = null
 
 
 
-async function getHistoricalStockPrices(symbol, startDate, endDate) {
-    try {
-        // Fetch historical prices
-        const queryOptions = { period1: startDate, period2: endDate };  // Dates in YYYY-MM-DD format
-        const result = await yahooFinance.historical(symbol, queryOptions);
-
-        return result;
-    } catch (error) {
-        console.error(error);
-    }
-}
-
 async function main() {
     for (let stock of stockList) {
         try {
-            prices = await getHistoricalStockPrices(stock, '2000-9-01', '2024-9-7');
+            prices = await tr.trade.getHistoricalStockPrices(stock, '2000-9-01', '2024-9-7');
             for (let price of prices) {
                 try {
                     let stock_date = price.stock_date
