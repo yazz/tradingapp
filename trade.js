@@ -25,15 +25,6 @@ let stockBalance        = 0
 let totalBalance        = 0
 
 
-function                uuidv4      (  ) {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
-}
-function                delay       (  ms  ) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
 async function          main        (  ) {
     console.log("Starting date: " + date)
 
@@ -51,24 +42,30 @@ async function          main        (  ) {
                 let price = stockPrice.rows[0]
                 if ((price.stock_open > 0) && (cashBalance - price.stock_open) > 0) {
                     let stockBalance = 0
-                    for (let stock in currentPositions) {
+                    let listOfPositions = await client.query("select * from trading_positions",[])
+
+                    for (let position in listOfPositions) {
                         let stockPrice = await client.query("select * from source_yahoo_finance_daily_stock_data where symbol = $1 and stock_date = $2",
-                            [stock   ,  date])
+                            [position.stock_symbol   ,  date])
                         if (stockPrice.rowCount > 0) {
                             let price = stockPrice.rows[0]
-                            let StockValue = price.stock_open * currentPositions[stock].shares
+                            let StockValue = price.stock_open * position.amount
                             stockBalance = stockBalance + StockValue
                         }
                     }
                     totalBalance = cashBalance + stockBalance
 
 
-                    if (currentPositions[RandomStock] == undefined) {
+                    let position = await client.query("select * from trading_positions where stock_symbol = $1",
+                        [RandomStock])
+                    if (position.rowCount == 0) {
                         currentPositions[RandomStock] = {
                             symbol:     RandomStock,
                             shares:     0,
                             cost:       0
                         }
+                        await client.query("insert into trading_positions (stock_symbol,cost_usd,amount) values ($1,$2,$3)",
+                            [RandomStock,0,0])
                     }
                     currentPositions[RandomStock].shares ++
                     currentPositions[RandomStock].cost += parseFloat(price.stock_open)
