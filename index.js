@@ -60,7 +60,6 @@ async function main() {
     box.on('click', function (data) {
         box.setContent(tr.helpers.getDemoText());
         screen.render();
-        tr.helpers.execCommand("node trade.js")
     });
     box.key('enter', function (ch, key) {
         box.setContent(tr.helpers.getDemoText());
@@ -130,7 +129,10 @@ async function main() {
             },
         },
     });
-
+    button2.on('click', async function () {
+        console.log("node trade.js")
+        tr.helpers.execCommand("node trade.js")
+    })  
 
 // Create a box perfectly centered horizontally and vertically.
     var positionsWindow = blessed.box({
