@@ -12,6 +12,8 @@
     "blessed": "^0.1.81",
     "blessed-contrib": "^4.11.0",
     "pg": "^8.13.0",
+    "ps-list": "^8.1.1",
+    "ps-node": "^0.1.6",
     "uuid": "^10.0.0",
     "yahoo-finance2": "^2.13.2"
   }

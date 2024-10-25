@@ -1,12 +1,27 @@
 const fs                = require('fs');
 const { Client }        = require('pg');
+const ps            = require('ps-node');
 let tr = require('./helpers.js')
 
 const config            = JSON.parse(fs.readFileSync('config.json', 'utf8'));
 
 var blessed = require('blessed');
 
+
+async function listNodeProcesses() {
+    return new Promise((resolve, reject) => {
+        ps.lookup({ command: 'node' }, (err, resultList) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve(resultList);
+        });
+    });
+}
+
 async function main() {
+    let processes = await listNodeProcesses()
+    let table
     let client = await tr.helpers.connectDb(config)
 
 
@@ -43,6 +58,7 @@ async function main() {
     box.on('click', function (data) {
         box.setContent(tr.helpers.getDemoText());
         screen.render();
+        tr.helpers.execCommand("node trade.js")
     });
     box.key('enter', function (ch, key) {
         box.setContent(tr.helpers.getDemoText());
@@ -77,8 +93,12 @@ async function main() {
     });
 
 // Button click event
-    button.on('click', function () {
+    button.on('click', async function () {
         box.setContent('Button was clicked!');
+        processes = await listNodeProcesses()
+        console.log(processes)
+        table.setData(tr.helpers.convertToArrayOfArrays(processes))
+        screen.render()
         screen.render(); // Re-render the screen to show changes
     });
 
@@ -134,6 +154,8 @@ async function main() {
     });
     screen.append(positionsWindow);
 // Create a listtable widget
+
+
 
 let positions = await client.query("select  *  from  trading_positions",[])
 
@@ -207,7 +229,7 @@ let positions = await client.query("select  *  from  trading_positions",[])
 
     
 // Create a listtable widget
-    const table = blessed.listtable({
+    table = blessed.listtable({
         parent: box3,
         top: 'center',
         left: 'center',
@@ -228,6 +250,9 @@ let positions = await client.query("select  *  from  trading_positions",[])
             ['3', 'Foo Bar', 'UK'],    // Row 3
         ],
     });
+    processes = await listNodeProcesses()
+    table.setData(tr.helpers.convertToArrayOfArrays(processes))
+    screen.render()
 
 
 // Quit on Escape, q, or Control-C.
