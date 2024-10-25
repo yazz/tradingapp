@@ -130,8 +130,8 @@ async function main() {
         },
     });
     button2.on('click', async function () {
-        console.log("node trade.js")
-        tr.helpers.execCommand("node trade.js")
+        console.log("node ./get_prices.js")
+        tr.helpers.execCommand("node ./get_prices.js")
     })  
 
 // Create a box perfectly centered horizontally and vertically.

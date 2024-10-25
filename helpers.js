@@ -92,14 +92,14 @@ module.exports = {
 
             exec(command, (error, stdout, stderr) => {
                 if (error) {
-                    //console.error(`Error: ${error.message}`);
+                    console.error(`Error: ${error.message}`);
                     return;
                 }
                 if (stderr) {
-                    //console.error(`stderr: ${stderr}`);
+                    console.error(`stderr: ${stderr}`);
                     return;
                 }
-                //console.log(`stdout: ${stdout}`);
+                console.log(`stdout: ${stdout}`);
             });
         }
     }
