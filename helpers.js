@@ -71,7 +71,23 @@ module.exports = {
                 var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
                 return v.toString(16);
             });
+        },
+        convertToArrayOfArrays: function (data) {
+            if (data.length === 0) return [];
+        
+            // Extract headers from the keys of the first object
+            const headers = Object.keys(data[0]);
+            const result = [headers];
+        
+            // Loop through each object to get the values
+            for (const obj of data) {
+                const row = headers.map(header => obj[header]);
+                result.push(row);
+            }
+        
+            return result;
         }
+        
         
     }
 }

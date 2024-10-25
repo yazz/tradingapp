@@ -134,6 +134,9 @@ async function main() {
     });
     screen.append(positionsWindow);
 // Create a listtable widget
+
+let positions = await client.query("select  *  from  trading_positions",[])
+
     const positionsTable = blessed.listtable({
         parent: positionsWindow,
         top: 'center',
@@ -148,12 +151,7 @@ async function main() {
         },
         keys: true, // Allows navigation using arrow keys
         mouse: true, // Allows interaction using the mouse
-        data: [
-            ['ID', 'Name', 'Country'], // Headers
-            ['1', 'John Doe', 'USA'],  // Row 1
-            ['2', 'Jane Smith', 'Canada'], // Row 2
-            ['3', 'Foo Bar', 'UK'],    // Row 3
-        ],
+        data: tr.helpers.convertToArrayOfArrays(positions.rows),
     });
 
 
@@ -207,8 +205,7 @@ async function main() {
     screen.append(box3);
 
 
-    let positions = await client.query("select  *  from  trading_positions",[])
-
+    
 // Create a listtable widget
     const table = blessed.listtable({
         parent: box3,
