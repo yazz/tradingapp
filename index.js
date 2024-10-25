@@ -9,7 +9,7 @@ var blessed = require('blessed');
 
 
 async function listNodeProcesses() {
-    return new Promise((resolve, reject) => {
+    let promise = new Promise((resolve, reject) => {
         ps.lookup({ command: 'node' }, (err, resultList) => {
             if (err) {
                 return reject(err);
@@ -17,6 +17,8 @@ async function listNodeProcesses() {
             resolve(resultList);
         });
     });
+    let res = await promise
+    return res
 }
 
 async function main() {
