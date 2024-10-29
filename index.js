@@ -255,7 +255,7 @@ let positions = await client.query("select  *  from  trading_positions",[])
         ],
     });
     processes = await listNodeProcesses()
-    table.setData(tr.helpers.convertToArrayOfArrays(processes))
+    //table.setData(tr.helpers.convertToArrayOfArrays(processes))
     screen.render()
 
 
