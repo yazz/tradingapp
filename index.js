@@ -1,28 +1,33 @@
-const fs                = require('fs');
-const { Client }        = require('pg');
-const ps            = require('ps-node');
-let tr = require('./helpers.js')
+const   fs                  = require('fs');
+const   { Client }          = require('pg');
+const   ps                  = require('ps-node');
+let     tr                  = require('./helpers.js')
+var     blessed             = require('blessed');
 
-const config            = JSON.parse(fs.readFileSync('config.json', 'utf8'));
+const config                = JSON.parse(fs.readFileSync('config.json', 'utf8'));
 
-var blessed = require('blessed');
-
-
-async function listNodeProcesses() {
-    let promise = new Promise((resolve, reject) => {
-        ps.lookup({ command: 'node' }, (err, resultList) => {
-            if (err) {
-                return reject(err);
-            }
-            resolve(resultList);
+let app = {
+    listNodeProcesses: async function () {
+        let promise = new Promise((resolve, reject) => {
+            ps.lookup({ command: 'node' }, (err, resultList) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(resultList);
+            });
         });
-    });
-    let res = await promise
-    return res
+        let res = await promise
+        return res
+    }
+
 }
 
+
+
+
+
 async function main() {
-    let processes = await listNodeProcesses()
+    let processes = await app.listNodeProcesses()
     let table
     let client = await tr.helpers.connectDb(config)
 
@@ -96,7 +101,7 @@ async function main() {
 // Button click event
     button.on('click', async function () {
         box.setContent('Button was clicked!');
-        processes = await listNodeProcesses()
+        processes = await app.listNodeProcesses()
         console.log(processes)
         table.setData(tr.helpers.convertToArrayOfArrays(processes))
         screen.render()
@@ -254,7 +259,7 @@ let positions = await client.query("select  *  from  trading_positions",[])
             ['3', 'Foo Bar', 'UK'],    // Row 3
         ],
     });
-    processes = await listNodeProcesses()
+    processes = await app.listNodeProcesses()
     table.setData(tr.helpers.convertToArrayOfArrays(processes))
     screen.render()
 
