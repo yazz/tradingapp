@@ -8,27 +8,35 @@ const config                = JSON.parse(fs.readFileSync('config.json', 'utf8'))
 
 let app = {
     vars: {
-        screen: null
+        screen: null,
+        uiTableOfNames: null,
+        box: null
+    },
+    screen: {
+        createScreen: function() {
+            // Create a screen object.
+            app.vars.screen = blessed.screen({
+                smartCSR: true
+            });
+
+            app.vars.screen.title = 'ZAlgoHedgeFund';
+        },
+        createTopPane: function() {
+
+        }
     },
     main:               async function  (  ) {
-        let table
         let client = await tr.helpers.connectDb(config)
 
+        app.screen.createScreen()
 
-        // Create a screen object.
-        app.vars.screen = blessed.screen({
-            smartCSR: true
-        });
-
-        app.vars.screen.title = 'my window title';
-
-// Create a box perfectly centered horizontally and vertically.
-        var box = blessed.box({
+        // Create a box perfectly centered horizontally and vertically.
+        app.vars.box = blessed.box({
             top: 'top',
             left: 'left',
             width: '50%',
             height: '50%',
-            content: "Zubair's {bold}Trading system{/bold}!",
+            content: "{bold}ZAlgoHedgeFund{/bold}!",
             tags: true,
             border: {
                 type: 'line'
@@ -44,20 +52,20 @@ let app = {
                 }
             }
         });
-        app.vars.screen.append(box);
-        box.on('click', function (data) {
+        app.vars.screen.append(app.vars.box);
+        app.vars.box.on('click', function (data) {
             box.setContent(tr.helpers.getDemoText());
             app.vars.screen.render();
         });
-        box.key('enter', function (ch, key) {
-            box.setContent(tr.helpers.getDemoText());
+        app.vars.box.key('enter', function (ch, key) {
+            app.vars.box.setContent(tr.helpers.getDemoText());
             app.vars.screen.render();
         });
 
 
 // Create a button
         const button = blessed.button({
-            parent: box,  // Attach button to the box
+            parent: app.vars.box,  // Attach button to the box
             mouse: true,
             keys: true,
             shrink: true,
@@ -83,7 +91,7 @@ let app = {
 
 // Button click event
         button.on('click', async function () {
-            box.setContent('Button was clicked!');
+            app.vars.box.setContent('Button was clicked!');
             //table.setData(tr.helpers.convertToArrayOfArrays(processes))
             app.vars.screen.render()
             app.vars.screen.render(); // Re-render the screen to show changes
@@ -92,7 +100,7 @@ let app = {
 
 // Create a button
         const button2 = blessed.button({
-            parent: box,  // Attach button to the box
+            parent: app.vars.box,  // Attach button to the box
             mouse: true,
             keys: true,
             shrink: true,
@@ -219,7 +227,7 @@ let app = {
 
 
 // Create a listtable widget
-        table = blessed.listtable({
+        app.vars.uiTableOfNames = blessed.listtable({
             parent: box3,
             top: 'center',
             left: 'center',
@@ -251,7 +259,7 @@ let app = {
         });
 
 // Focus our element.
-        box.focus();
+        app.vars.box.focus();
 
 // Render the screen.
         app.vars.screen.render();
