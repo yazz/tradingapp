@@ -7,18 +7,21 @@ var     blessed             = require('blessed');
 const config                = JSON.parse(fs.readFileSync('config.json', 'utf8'));
 
 let app = {
-    main: async function() {
+    vars: {
+        screen: null
+    },
+    main:               async function  (  ) {
         let processes = await app.listNodeProcesses()
         let table
         let client = await tr.helpers.connectDb(config)
 
 
-// Create a screen object.
-        var screen = blessed.screen({
+        // Create a screen object.
+        app.vars.screen = blessed.screen({
             smartCSR: true
         });
 
-        screen.title = 'my window title';
+        app.vars.screen.title = 'my window title';
 
 // Create a box perfectly centered horizontally and vertically.
         var box = blessed.box({
@@ -42,14 +45,14 @@ let app = {
                 }
             }
         });
-        screen.append(box);
+        app.vars.screen.append(box);
         box.on('click', function (data) {
             box.setContent(tr.helpers.getDemoText());
-            screen.render();
+            app.vars.screen.render();
         });
         box.key('enter', function (ch, key) {
             box.setContent(tr.helpers.getDemoText());
-            screen.render();
+            app.vars.screen.render();
         });
 
 
@@ -85,8 +88,8 @@ let app = {
             processes = await app.listNodeProcesses()
             console.log(processes)
             table.setData(tr.helpers.convertToArrayOfArrays(processes))
-            screen.render()
-            screen.render(); // Re-render the screen to show changes
+            app.vars.screen.render()
+            app.vars.screen.render(); // Re-render the screen to show changes
         });
 
 
@@ -142,7 +145,7 @@ let app = {
                 }
             }
         });
-        screen.append(positionsWindow);
+        app.vars.screen.append(positionsWindow);
 // Create a listtable widget
 
 
@@ -189,7 +192,7 @@ let app = {
                 }
             }
         });
-        screen.append(box2);
+        app.vars.screen.append(box2);
 
 
 // Create a box perfectly centered horizontally and vertically.
@@ -214,7 +217,7 @@ let app = {
                 }
             }
         });
-        screen.append(box3);
+        app.vars.screen.append(box3);
 
 
 
@@ -242,11 +245,11 @@ let app = {
         });
         processes = await app.listNodeProcesses()
         table.setData(tr.helpers.convertToArrayOfArrays(processes))
-        screen.render()
+        app.vars.screen.render()
 
 
 // Quit on Escape, q, or Control-C.
-        screen.key(['escape', 'q', 'C-c'], function (ch, key) {
+        app.vars.screen.key(['escape', 'q', 'C-c'], function (ch, key) {
             return process.exit(0);
         });
 
@@ -254,9 +257,9 @@ let app = {
         box.focus();
 
 // Render the screen.
-        screen.render();
+        app.vars.screen.render();
     },
-    listNodeProcesses: async function () {
+    listNodeProcesses:  async function  (  ) {
         let promise = new Promise((resolve, reject) => {
             ps.lookup({ command: 'node' }, (err, resultList) => {
                 if (err) {
@@ -268,7 +271,6 @@ let app = {
         let res = await promise
         return res
     }
-
 }
 
 
