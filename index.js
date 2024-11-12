@@ -48,7 +48,7 @@ let app = {
             });
             app.vars.screen.append(app.vars.box);
             app.vars.box.on('click', function (data) {
-                box.setContent(tr.helpers.getDemoText());
+                app.vars.box.setContent(tr.helpers.getDemoText());
                 app.vars.screen.render();
             });
             app.vars.box.key('enter', function (ch, key) {
