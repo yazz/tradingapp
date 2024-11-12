@@ -174,7 +174,7 @@ let app = {
             app.vars.uiTableOfNames = blessed.listtable({
                 parent: app.vars.mainPane,
                 top: 'center',
-                right: 'center',
+                left: 'center',
                 width: '80%',
                 height: '50%',
                 border: {type: 'line'},
