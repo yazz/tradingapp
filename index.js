@@ -11,7 +11,6 @@ let app = {
         screen: null
     },
     main:               async function  (  ) {
-        let processes = await app.listNodeProcesses()
         let table
         let client = await tr.helpers.connectDb(config)
 
@@ -85,9 +84,7 @@ let app = {
 // Button click event
         button.on('click', async function () {
             box.setContent('Button was clicked!');
-            processes = await app.listNodeProcesses()
-            console.log(processes)
-            table.setData(tr.helpers.convertToArrayOfArrays(processes))
+            //table.setData(tr.helpers.convertToArrayOfArrays(processes))
             app.vars.screen.render()
             app.vars.screen.render(); // Re-render the screen to show changes
         });
@@ -243,8 +240,8 @@ let app = {
                 ['3', 'Foo Bar', 'UK'],    // Row 3
             ],
         });
-        processes = await app.listNodeProcesses()
-        table.setData(tr.helpers.convertToArrayOfArrays(processes))
+        //processes = await app.listNodeProcesses()
+        //table.setData(tr.helpers.convertToArrayOfArrays(processes))
         app.vars.screen.render()
 
 
@@ -258,18 +255,6 @@ let app = {
 
 // Render the screen.
         app.vars.screen.render();
-    },
-    listNodeProcesses:  async function  (  ) {
-        let promise = new Promise((resolve, reject) => {
-            ps.lookup({ command: 'node' }, (err, resultList) => {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(resultList);
-            });
-        });
-        let res = await promise
-        return res
     }
 }
 
