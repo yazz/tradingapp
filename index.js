@@ -10,7 +10,9 @@ let app = {
     vars: {
         screen: null,
         uiTableOfNames: null,
-        box: null
+        box: null,
+        leftPane: null,
+        mainPane: null
     },
     screen: {
         createScreen: function() {
@@ -117,6 +119,81 @@ let app = {
                 console.log("node ./get_prices.js")
                 tr.helpers.execCommand("node ./get_prices.js")
             })
+        },
+        createLeftPane: function() {
+            app.vars.leftPane = blessed.box({
+                bottom: '0',
+                left: '0',
+                width: '20%',
+                height: '80%',
+                content: "Trades",
+                tags: true,
+                border: {
+                    type: 'line'
+                },
+                style: {
+                    fg: 'white',
+                    bg: 'magenta',
+                    border: {
+                        fg: '#f0f0f0'
+                    },
+                    hover: {
+                        bg: 'green'
+                    }
+                }
+            });
+            app.vars.screen.append(app.vars.leftPane);
+        },
+        createMainPane: function() {
+            // Create a box perfectly centered horizontally and vertically.
+            app.vars.mainPane = blessed.box({
+                bottom: '0',
+                right: '0',
+                width: '80%',
+                height: '80%',
+                content: "Other",
+                tags: true,
+                border: {
+                    type: 'line'
+                },
+                style: {
+                    fg: 'white',
+                    bg: 'magenta',
+                    border: {
+                        fg: '#f0f0f0'
+                    },
+                    hover: {
+                        bg: 'green'
+                    }
+                }
+            });
+            app.vars.screen.append(app.vars.mainPane);
+
+
+            // Create a listtable widget
+            app.vars.uiTableOfNames = blessed.listtable({
+                parent: app.vars.mainPane,
+                top: 'center',
+                right: 'center',
+                width: '80%',
+                height: '50%',
+                border: {type: 'line'},
+                align: 'center', // Align text in the cells
+                style: {
+                    header: {fg: 'blue', bold: true},
+                    cell: {fg: 'white', selected: {bg: 'blue'}},
+                },
+                keys: true, // Allows navigation using arrow keys
+                mouse: true, // Allows interaction using the mouse
+                data: [
+                    ['ID', 'Name', 'Country'], // Headers
+                    ['1', 'John Doe', 'USA'],  // Row 1
+                    ['2', 'Jane Smith', 'Canada'], // Row 2
+                    ['3', 'Foo Bar', 'UK'],    // Row 3
+                ],
+            });
+            //processes = await app.listNodeProcesses()
+            //table.setData(tr.helpers.convertToArrayOfArrays(processes))
         }
     },
     main:               async function  (  ) {
@@ -124,85 +201,10 @@ let app = {
 
         app.screen.createScreen()
         app.screen.createTopPane()
+        app.screen.createLeftPane()
+        app.screen.createMainPane()
 
 
-
-
-// Create a box perfectly centered horizontally and vertically.
-        var box2 = blessed.box({
-            bottom: '0',
-            right: '0',
-            width: '50%',
-            height: '50%',
-            content: "Trades",
-            tags: true,
-            border: {
-                type: 'line'
-            },
-            style: {
-                fg: 'white',
-                bg: 'magenta',
-                border: {
-                    fg: '#f0f0f0'
-                },
-                hover: {
-                    bg: 'green'
-                }
-            }
-        });
-        app.vars.screen.append(box2);
-
-
-// Create a box perfectly centered horizontally and vertically.
-        var box3 = blessed.box({
-            bottom: '0',
-            left: '0',
-            width: '50%',
-            height: '50%',
-            content: "Other",
-            tags: true,
-            border: {
-                type: 'line'
-            },
-            style: {
-                fg: 'white',
-                bg: 'magenta',
-                border: {
-                    fg: '#f0f0f0'
-                },
-                hover: {
-                    bg: 'green'
-                }
-            }
-        });
-        app.vars.screen.append(box3);
-
-
-
-// Create a listtable widget
-        app.vars.uiTableOfNames = blessed.listtable({
-            parent: box3,
-            top: 'center',
-            left: 'center',
-            width: '80%',
-            height: '50%',
-            border: {type: 'line'},
-            align: 'center', // Align text in the cells
-            style: {
-                header: {fg: 'blue', bold: true},
-                cell: {fg: 'white', selected: {bg: 'blue'}},
-            },
-            keys: true, // Allows navigation using arrow keys
-            mouse: true, // Allows interaction using the mouse
-            data: [
-                ['ID', 'Name', 'Country'], // Headers
-                ['1', 'John Doe', 'USA'],  // Row 1
-                ['2', 'Jane Smith', 'Canada'], // Row 2
-                ['3', 'Foo Bar', 'UK'],    // Row 3
-            ],
-        });
-        //processes = await app.listNodeProcesses()
-        //table.setData(tr.helpers.convertToArrayOfArrays(processes))
         app.vars.screen.render()
 
 
