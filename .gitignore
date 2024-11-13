@@ -5,3 +5,4 @@ config.json
 trader
 *.sql
 bun.lockb
+zalgo_server

@@ -43,10 +43,8 @@ module.exports = {
                 client.connect()
                     .then(async function() {
                         console.log('Connected to PostgreSQL');
-                        postgresConnected = true
                         client.on('error', (err) => {
                             console.error('Lost connection to PostgreSQL:', err.stack);
-                            postgresConnected = false
                             // Optionally, try reconnecting or take other actions
                         });
                     })
