@@ -24,6 +24,25 @@ let app = {
 
             app.vars.screen.title = 'ZAlgoHedgeFund';
         },
+        setUpScreen:        async function() {
+            // Quit on Escape, q, or Control-C.
+            app.vars.screen.key(['escape', 'q', 'C-c'], function (ch, key) {
+                return process.exit(0);
+            });
+
+            // Focus our element.
+            app.vars.uiPaneTop.focus();
+
+            // Render the screen.
+            app.vars.screen.render();
+        },
+        changeMode:         async function() {
+            await app.screen.createTopPane()
+            await app.screen.createLeftPane()
+            await app.screen.createMainPane()
+            await app.screen.setUpScreen()
+        },
+
         createTopPane:      async function() {
             // Create a box perfectly centered horizontally and vertically.
             app.vars.uiPaneTop = blessed.box({
@@ -195,28 +214,14 @@ let app = {
             });
             //processes = await app.listNodeProcesses()
             //table.setData(tr.helpers.convertToArrayOfArrays(processes))
-        },
-        setUpScreen:        async function() {
-            // Quit on Escape, q, or Control-C.
-            app.vars.screen.key(['escape', 'q', 'C-c'], function (ch, key) {
-                return process.exit(0);
-            });
-
-            // Focus our element.
-            app.vars.uiPaneTop.focus();
-
-            // Render the screen.
-            app.vars.screen.render();
         }
+
     },
     main:               async function  (  ) {
         let client = await tr.helpers.connectDb(config)
-
+        
         await app.screen.createScreen()
-        await app.screen.createTopPane()
-        await app.screen.createLeftPane()
-        await app.screen.createMainPane()
-        await app.screen.setUpScreen()
+        await app.screen.changeMode()
     }
 }
 
