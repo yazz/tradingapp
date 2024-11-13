@@ -266,6 +266,11 @@ let app = {
 }
 
     },
+    processes: {
+        isMainProcessRunning: async function() {
+            //ps aux | grep -i zalgo_server2 | grep -v grep
+        }
+    },
     main:               async function  (  ) {
         let client = await tr.helpers.connectDb(config)
 
