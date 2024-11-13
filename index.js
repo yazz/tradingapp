@@ -155,7 +155,9 @@ let app = {
             });
 
 
-            // Create a button
+            //
+            // demo button
+            //
             const demoButton = blessed.button({
                 parent: app.vars.uiPaneTop,  // Attach button to the box
                 mouse: true,
@@ -184,6 +186,41 @@ let app = {
                 app.vars.uiMode.main = "demo"
                 await app.screen.changeMode()
             })
+
+
+
+            //
+            // processesButton button
+            //
+            const processesButton = blessed.button({
+                parent: app.vars.uiPaneTop,  // Attach button to the box
+                mouse: true,
+                keys: true,
+                shrink: true,
+                padding: {
+                    left: 2,
+                    right: 2,
+                },
+                left: 25,
+                bottom: 0,  // Position within the box
+                name: 'submit',
+                content: 'Processes',
+                style: {
+                    bg: 'blue',
+                    fg: 'white',
+                    focus: {
+                        bg: 'green',
+                    },
+                    hover: {
+                        bg: 'green',
+                    },
+                },
+            });
+            processesButton.on('mousedown', async function () {
+                app.vars.uiMode.main = "processes"
+                await app.screen.changeMode()
+            })
+
         },
         createLeftPane:     async function() {
 
