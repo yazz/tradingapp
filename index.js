@@ -15,6 +15,126 @@ let app = {
         uiPaneMain:             null,
         uiMode:                 {}
     },
+    panes: {
+        createHomePane: async function() {
+            app.vars.uiTableOfNames = blessed.listtable({
+                parent: app.vars.uiPaneMain,
+                top: 'center',
+                left: 'center',
+                width: '80%',
+                height: '50%',
+                border: {type: 'line'},
+                align: 'center', // Align text in the cells
+                style: {
+                    header: {fg: 'blue', bold: true},
+                    cell: {fg: 'white', selected: {bg: 'blue'}},
+                },
+                keys: true, // Allows navigation using arrow keys
+                mouse: true, // Allows interaction using the mouse
+                data: [
+                    ['ID', 'Name', 'Country'], // Headers
+                    ['1', 'John Doe', 'USA'],  // Row 1
+                    ['2', 'Jane Smith', 'Canada'], // Row 2
+                    ['3', 'Foo Bar', 'UK'],    // Row 3
+                ],
+            });
+            //processes = await app.listNodeProcesses()
+            //table.setData(tr.helpers.convertToArrayOfArrays(processes))
+        },
+        createServerPane: async function() {
+            //
+            // server button
+            //
+            app.vars.uiPaneMain.setContent("Server")
+            const serverRunningButton = blessed.button({
+                parent: app.vars.uiPaneMain,  // Attach button to the box
+                mouse: true,
+                keys: true,
+                shrink: true,
+                padding: {
+                    left: 2,
+                    right: 2,
+                },
+                left: 15,
+                top: 0,  // Position within the box
+                name: 'submit',
+                content: 'Server running?',
+                style: {
+                    bg: 'blue',
+                    fg: 'white',
+                    focus: {
+                        bg: 'green',
+                    },
+                    hover: {
+                        bg: 'green',
+                    },
+                },
+            });
+            serverRunningButton.on('mousedown', async function () {
+                let ret = await app.processes.isMainServerRunning()
+                console.log("Server running: " + ret)
+
+            })
+
+            const killServerButton = blessed.button({
+                parent: app.vars.uiPaneMain,  // Attach button to the box
+                mouse: true,
+                keys: true,
+                shrink: true,
+                padding: {
+                    left: 2,
+                    right: 2,
+                },
+                left: 35,
+                top: 0,  // Position within the box
+                name: 'submit',
+                content: 'Kill Server',
+                style: {
+                    bg: 'blue',
+                    fg: 'white',
+                    focus: {
+                        bg: 'green',
+                    },
+                    hover: {
+                        bg: 'green',
+                    },
+                },
+            });
+            killServerButton.on('mousedown', async function () {
+                await app.processes.killMainServer()
+            })
+
+
+            const startServerButton = blessed.button({
+                parent: app.vars.uiPaneMain,  // Attach button to the box
+                mouse: true,
+                keys: true,
+                shrink: true,
+                padding: {
+                    left: 2,
+                    right: 2,
+                },
+                left: 55,
+                top: 0,  // Position within the box
+                name: 'submit',
+                content: 'Start Server',
+                style: {
+                    bg: 'blue',
+                    fg: 'white',
+                    focus: {
+                        bg: 'green',
+                    },
+                    hover: {
+                        bg: 'green',
+                    },
+                },
+            });
+            startServerButton.on('mousedown', async function () {
+                await app.processes.startMainServer()
+            })
+
+        }
+    },
     screen: {
         createScreen:       async function() {
             // Create a screen object.
@@ -220,7 +340,39 @@ let app = {
             processesButton.on('mousedown', async function () {
                 app.vars.uiMode.main = "processes"
                 await app.screen.changeMode()
-                await app.processes.isMainServerRunning()
+            })
+
+
+            //
+            // serverButton button
+            //
+            const serverButton = blessed.button({
+                parent: app.vars.uiPaneTop,  // Attach button to the box
+                mouse: true,
+                keys: true,
+                shrink: true,
+                padding: {
+                    left: 2,
+                    right: 2,
+                },
+                left: 41,
+                bottom: 0,  // Position within the box
+                name: 'submit',
+                content: 'server',
+                style: {
+                    bg: 'blue',
+                    fg: 'white',
+                    focus: {
+                        bg: 'green',
+                    },
+                    hover: {
+                        bg: 'green',
+                    },
+                },
+            });
+            serverButton.on('mousedown', async function () {
+                app.vars.uiMode.main = "server"
+                await app.screen.changeMode()
             })
         },
         reloadLeftPane:     async function() {
@@ -232,63 +384,46 @@ let app = {
         reloadMainPane:     async function() {
             app.vars.uiPaneMain.children.forEach(child => child.detach());
             if ((!app.vars.uiMode.main) || (app.vars.uiMode.main == "home")) {
-                // Create a box perfectly centered horizontally and vertically.
-
-
-                // Create a listtable widget
-                app.vars.uiTableOfNames = blessed.listtable({
-                    parent: app.vars.uiPaneMain,
-                    top: 'center',
-                    left: 'center',
-                    width: '80%',
-                    height: '50%',
-                    border: {type: 'line'},
-                    align: 'center', // Align text in the cells
-                    style: {
-                        header: {fg: 'blue', bold: true},
-                        cell: {fg: 'white', selected: {bg: 'blue'}},
-                    },
-                    keys: true, // Allows navigation using arrow keys
-                    mouse: true, // Allows interaction using the mouse
-                    data: [
-                        ['ID', 'Name', 'Country'], // Headers
-                        ['1', 'John Doe', 'USA'],  // Row 1
-                        ['2', 'Jane Smith', 'Canada'], // Row 2
-                        ['3', 'Foo Bar', 'UK'],    // Row 3
-                    ],
-                });
-                //processes = await app.listNodeProcesses()
-                //table.setData(tr.helpers.convertToArrayOfArrays(processes))
+                await app.panes.createHomePane()
             } else if (app.vars.uiMode.main == "demo") {
 
+            } else if (app.vars.uiMode.main == "processes") {
+
+            } else if (app.vars.uiMode.main == "server") {
+                await app.panes.createServerPane()
             }
 
-}
+
+        }
 
     },
     processes: {
         isMainServerRunning: async function () {
             try {
                 let ret = await tr.helpers.execCommand("ps aux | grep -i zalgo_server | grep -v grep")
-                console.log(ret)
+                return true
             } catch (err) {
-                console.log("not running")
+                return false
             }
         },
         killMainServer: async function () {
             try {
-                let ret = await tr.helpers.execCommand("ps aux | grep -i zalgo_server | grep -v grep")
-                console.log(ret)
+                let ret = await tr.helpers.execCommand("pkill -9 -f zalgo_server ")
+                console.log("server killed")
             } catch (err) {
-                console.log("not running")
+                console.log("Could not kill server")
             }
         },
         startMainServer: async function () {
             try {
-                let ret = await tr.helpers.execCommand("./zalgo_server")
-                console.log(ret)
+                if (await app.processes.isMainServerRunning()) {
+                    console.log("server already running")
+                } else {
+                    let ret = await tr.helpers.execCommand("./zalgo_server")
+                    console.log("server started: " + ret)
+                }
             } catch (err) {
-                console.log("Could not start")
+                console.log("Could not start server")
             }
         }
     },
