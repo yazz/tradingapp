@@ -1,6 +1,8 @@
 const fs                = require('fs');
 const { Client }        = require('pg');
 const yahooFinance      = require('yahoo-finance2').default;
+const { exec }          = require('child_process');
+
 module.exports = {
     data: {
         stockList: [ "BTC-USD", "ADA-USD" , "ETH-USD" , "DOT-USD" , "SOL-USD" ,
@@ -85,20 +87,19 @@ module.exports = {
         
             return result;
         },
-        execCommand: function (command) {
-            const { exec } = require('child_process');
+        execCommand: async function (command) {
 
-            exec(command, (error, stdout, stderr) => {
-                if (error) {
-                    console.error(`Error: ${error.message}`);
-                    return;
-                }
-                if (stderr) {
-                    console.error(`stderr: ${stderr}`);
-                    return;
-                }
-                console.log(`stdout: ${stdout}`);
+            let ret = new Promise((resolve, reject) => {
+                exec(command, (error, stdout, stderr) => {
+                    if (error) {
+                        reject(`Error: ${stderr || error.message}`);
+                        return;
+                    }
+                    resolve(stdout.trim());  // Remove trailing newlines or spaces
+                });
             });
+            let rv = await ret
+            return rv
         }
     }
 }

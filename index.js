@@ -37,9 +37,10 @@ let app = {
             app.vars.screen.render();
         },
         changeMode:         async function() {
-            await app.screen.createTopPane()
-            await app.screen.createLeftPane()
-            await app.screen.createMainPane()
+            await app.screen.reloadTopPane()
+            await app.screen.reloadLeftPane()
+            await app.screen.reloadMainPane()
+
             await app.screen.setUpScreen()
         },
         createBoxes:        async function() {
@@ -98,7 +99,7 @@ let app = {
 
         },
 
-        createTopPane:      async function() {
+        reloadTopPane:      async function() {
 
             // Create a box perfectly centered horizontally and vertically.
             app.vars.uiPaneTop = blessed.box({
@@ -219,17 +220,16 @@ let app = {
             processesButton.on('mousedown', async function () {
                 app.vars.uiMode.main = "processes"
                 await app.screen.changeMode()
+                await app.processes.isMainServerRunning()
             })
-
         },
-        createLeftPane:     async function() {
+        reloadLeftPane:     async function() {
 
             if ((!app.vars.uiMode.main) || (app.vars.uiMode.main == "home")) {
             } else if (app.vars.uiMode.main == "demo") {
             }
-        }
-        ,
-        createMainPane:     async function() {
+        },
+        reloadMainPane:     async function() {
             app.vars.uiPaneMain.children.forEach(child => child.detach());
             if ((!app.vars.uiMode.main) || (app.vars.uiMode.main == "home")) {
                 // Create a box perfectly centered horizontally and vertically.
@@ -267,8 +267,29 @@ let app = {
 
     },
     processes: {
-        isMainProcessRunning: async function() {
-            //ps aux | grep -i zalgo_server2 | grep -v grep
+        isMainServerRunning: async function () {
+            try {
+                let ret = await tr.helpers.execCommand("ps aux | grep -i zalgo_server | grep -v grep")
+                console.log(ret)
+            } catch (err) {
+                console.log("not running")
+            }
+        },
+        killMainServer: async function () {
+            try {
+                let ret = await tr.helpers.execCommand("ps aux | grep -i zalgo_server | grep -v grep")
+                console.log(ret)
+            } catch (err) {
+                console.log("not running")
+            }
+        },
+        startMainServer: async function () {
+            try {
+                let ret = await tr.helpers.execCommand("./zalgo_server")
+                console.log(ret)
+            } catch (err) {
+                console.log("Could not start")
+            }
         }
     },
     main:               async function  (  ) {
