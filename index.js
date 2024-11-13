@@ -42,8 +42,64 @@ let app = {
             await app.screen.createMainPane()
             await app.screen.setUpScreen()
         },
+        createBoxes:        async function() {
+            //
+            // top pane
+            //
+            app.vars.uiPaneLeftMenu = blessed.box({
+                bottom: '0',
+                left: '0',
+                width: '20%',
+                height: '80%',
+                content: "Trades",
+                tags: true,
+                border: {
+                    type: 'line'
+                },
+                style: {
+                    fg: 'white',
+                    bg: 'magenta',
+                    border: {
+                        fg: '#f0f0f0'
+                    },
+                    hover: {
+                        bg: 'green'
+                    }
+                }
+            });
+            app.vars.screen.append(app.vars.uiPaneLeftMenu);
+
+
+            //
+            // left pane
+            //
+            app.vars.uiPaneMain = blessed.box({
+                bottom: '0',
+                right: '0',
+                width: '80%',
+                height: '80%',
+                content: "Other",
+                tags: true,
+                border: {
+                    type: 'line'
+                },
+                style: {
+                    fg: 'white',
+                    bg: 'magenta',
+                    border: {
+                        fg: '#f0f0f0'
+                    },
+                    hover: {
+                        bg: 'green'
+                    }
+                }
+            });
+            app.vars.screen.append(app.vars.uiPaneMain);
+
+        },
 
         createTopPane:      async function() {
+
             // Create a box perfectly centered horizontally and vertically.
             app.vars.uiPaneTop = blessed.box({
                 top: 'top',
@@ -93,14 +149,14 @@ let app = {
                     },
                 },
             });
-            homeButton.on('click', async function (data) {
+            homeButton.on('mousedown', async function (data) {
                 app.vars.uiMode.main = "home"
                 await app.screen.changeMode()
             });
 
 
             // Create a button
-            const button2 = blessed.button({
+            const demoButton = blessed.button({
                 parent: app.vars.uiPaneTop,  // Attach button to the box
                 mouse: true,
                 keys: true,
@@ -124,86 +180,22 @@ let app = {
                     },
                 },
             });
-            button2.on('click', async function () {
+            demoButton.on('mousedown', async function () {
                 app.vars.uiMode.main = "demo"
                 await app.screen.changeMode()
             })
         },
         createLeftPane:     async function() {
+
             if ((!app.vars.uiMode.main) || (app.vars.uiMode.main == "home")) {
-                app.vars.uiPaneLeftMenu = blessed.box({
-                    bottom: '0',
-                    left: '0',
-                    width: '20%',
-                    height: '80%',
-                    content: "Trades",
-                    tags: true,
-                    border: {
-                        type: 'line'
-                    },
-                    style: {
-                        fg: 'white',
-                        bg: 'magenta',
-                        border: {
-                            fg: '#f0f0f0'
-                        },
-                        hover: {
-                            bg: 'green'
-                        }
-                    }
-                });
-                app.vars.screen.append(app.vars.uiPaneLeftMenu);
             } else if (app.vars.uiMode.main == "demo") {
-                app.vars.uiPaneLeftMenu = blessed.box({
-                    bottom: '0',
-                    left: '0',
-                    width: '20%',
-                    height: '80%',
-                    content: "Demo",
-                    tags: true,
-                    border: {
-                        type: 'line'
-                    },
-                    style: {
-                        fg: 'white',
-                        bg: 'magenta',
-                        border: {
-                            fg: '#f0f0f0'
-                        },
-                        hover: {
-                            bg: 'green'
-                        }
-                    }
-                });
-                app.vars.screen.append(app.vars.uiPaneLeftMenu);
             }
         }
         ,
         createMainPane:     async function() {
+            app.vars.uiPaneMain.children.forEach(child => child.detach());
             if ((!app.vars.uiMode.main) || (app.vars.uiMode.main == "home")) {
                 // Create a box perfectly centered horizontally and vertically.
-                app.vars.uiPaneMain = blessed.box({
-                    bottom: '0',
-                    right: '0',
-                    width: '80%',
-                    height: '80%',
-                    content: "Other",
-                    tags: true,
-                    border: {
-                        type: 'line'
-                    },
-                    style: {
-                        fg: 'white',
-                        bg: 'magenta',
-                        border: {
-                            fg: '#f0f0f0'
-                        },
-                        hover: {
-                            bg: 'green'
-                        }
-                    }
-                });
-                app.vars.screen.append(app.vars.uiPaneMain);
 
 
                 // Create a listtable widget
@@ -241,6 +233,7 @@ let app = {
         let client = await tr.helpers.connectDb(config)
 
         await app.screen.createScreen()
+        await app.screen.createBoxes()
         await app.screen.changeMode()
     }
 }
