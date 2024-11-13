@@ -67,17 +67,9 @@ let app = {
                 }
             });
             app.vars.screen.append(app.vars.uiPaneTop);
-            app.vars.uiPaneTop.on('click', function (data) {
-                app.vars.uiPaneTop.setContent(tr.helpers.getDemoText());
-                app.vars.screen.render();
-            });
-            app.vars.uiPaneTop.key('enter', function (ch, key) {
-                app.vars.uiPaneTop.setContent(tr.helpers.getDemoText());
-                app.vars.screen.render();
-            });
 
             // Create a button
-            const button = blessed.button({
+            const homeButton = blessed.button({
                 parent: app.vars.uiPaneTop,  // Attach button to the box
                 mouse: true,
                 keys: true,
@@ -89,7 +81,7 @@ let app = {
                 left: 0,
                 bottom: 0,  // Position within the box
                 name: 'submit',
-                content: 'Click me!',
+                content: 'Home',
                 style: {
                     bg: 'blue',
                     fg: 'white',
@@ -101,14 +93,11 @@ let app = {
                     },
                 },
             });
-
-            // Button click event
-            button.on('click', async function () {
-                app.vars.uiPaneTop.setContent('Button was clicked!');
-                //table.setData(tr.helpers.convertToArrayOfArrays(processes))
-                app.vars.screen.render()
-                app.vars.screen.render(); // Re-render the screen to show changes
+            homeButton.on('click', async function (data) {
+                app.vars.uiMode.main = "home"
+                await app.screen.changeMode()
             });
+
 
             // Create a button
             const button2 = blessed.button({
@@ -123,7 +112,7 @@ let app = {
                 left: 15,
                 bottom: 0,  // Position within the box
                 name: 'submit',
-                content: '2ns!',
+                content: 'Demo',
                 style: {
                     bg: 'blue',
                     fg: 'white',
@@ -136,90 +125,121 @@ let app = {
                 },
             });
             button2.on('click', async function () {
-                console.log("node ./get_prices.js")
-                tr.helpers.execCommand("node ./get_prices.js")
+                app.vars.uiMode.main = "demo"
+                await app.screen.changeMode()
             })
         },
         createLeftPane:     async function() {
-            app.vars.uiPaneLeftMenu = blessed.box({
-                bottom: '0',
-                left: '0',
-                width: '20%',
-                height: '80%',
-                content: "Trades",
-                tags: true,
-                border: {
-                    type: 'line'
-                },
-                style: {
-                    fg: 'white',
-                    bg: 'magenta',
+            if ((!app.vars.uiMode.main) || (app.vars.uiMode.main == "home")) {
+                app.vars.uiPaneLeftMenu = blessed.box({
+                    bottom: '0',
+                    left: '0',
+                    width: '20%',
+                    height: '80%',
+                    content: "Trades",
+                    tags: true,
                     border: {
-                        fg: '#f0f0f0'
+                        type: 'line'
                     },
-                    hover: {
-                        bg: 'green'
+                    style: {
+                        fg: 'white',
+                        bg: 'magenta',
+                        border: {
+                            fg: '#f0f0f0'
+                        },
+                        hover: {
+                            bg: 'green'
+                        }
                     }
-                }
-            });
-            app.vars.screen.append(app.vars.uiPaneLeftMenu);
-        },
-        createMainPane:     async function() {
-            // Create a box perfectly centered horizontally and vertically.
-            app.vars.uiPaneMain = blessed.box({
-                bottom: '0',
-                right: '0',
-                width: '80%',
-                height: '80%',
-                content: "Other",
-                tags: true,
-                border: {
-                    type: 'line'
-                },
-                style: {
-                    fg: 'white',
-                    bg: 'magenta',
+                });
+                app.vars.screen.append(app.vars.uiPaneLeftMenu);
+            } else if (app.vars.uiMode.main == "demo") {
+                app.vars.uiPaneLeftMenu = blessed.box({
+                    bottom: '0',
+                    left: '0',
+                    width: '20%',
+                    height: '80%',
+                    content: "Demo",
+                    tags: true,
                     border: {
-                        fg: '#f0f0f0'
+                        type: 'line'
                     },
-                    hover: {
-                        bg: 'green'
+                    style: {
+                        fg: 'white',
+                        bg: 'magenta',
+                        border: {
+                            fg: '#f0f0f0'
+                        },
+                        hover: {
+                            bg: 'green'
+                        }
                     }
-                }
-            });
-            app.vars.screen.append(app.vars.uiPaneMain);
-
-
-            // Create a listtable widget
-            app.vars.uiTableOfNames = blessed.listtable({
-                parent: app.vars.uiPaneMain,
-                top: 'center',
-                left: 'center',
-                width: '80%',
-                height: '50%',
-                border: {type: 'line'},
-                align: 'center', // Align text in the cells
-                style: {
-                    header: {fg: 'blue', bold: true},
-                    cell: {fg: 'white', selected: {bg: 'blue'}},
-                },
-                keys: true, // Allows navigation using arrow keys
-                mouse: true, // Allows interaction using the mouse
-                data: [
-                    ['ID', 'Name', 'Country'], // Headers
-                    ['1', 'John Doe', 'USA'],  // Row 1
-                    ['2', 'Jane Smith', 'Canada'], // Row 2
-                    ['3', 'Foo Bar', 'UK'],    // Row 3
-                ],
-            });
-            //processes = await app.listNodeProcesses()
-            //table.setData(tr.helpers.convertToArrayOfArrays(processes))
+                });
+                app.vars.screen.append(app.vars.uiPaneLeftMenu);
+            }
         }
+        ,
+        createMainPane:     async function() {
+            if ((!app.vars.uiMode.main) || (app.vars.uiMode.main == "home")) {
+                // Create a box perfectly centered horizontally and vertically.
+                app.vars.uiPaneMain = blessed.box({
+                    bottom: '0',
+                    right: '0',
+                    width: '80%',
+                    height: '80%',
+                    content: "Other",
+                    tags: true,
+                    border: {
+                        type: 'line'
+                    },
+                    style: {
+                        fg: 'white',
+                        bg: 'magenta',
+                        border: {
+                            fg: '#f0f0f0'
+                        },
+                        hover: {
+                            bg: 'green'
+                        }
+                    }
+                });
+                app.vars.screen.append(app.vars.uiPaneMain);
+
+
+                // Create a listtable widget
+                app.vars.uiTableOfNames = blessed.listtable({
+                    parent: app.vars.uiPaneMain,
+                    top: 'center',
+                    left: 'center',
+                    width: '80%',
+                    height: '50%',
+                    border: {type: 'line'},
+                    align: 'center', // Align text in the cells
+                    style: {
+                        header: {fg: 'blue', bold: true},
+                        cell: {fg: 'white', selected: {bg: 'blue'}},
+                    },
+                    keys: true, // Allows navigation using arrow keys
+                    mouse: true, // Allows interaction using the mouse
+                    data: [
+                        ['ID', 'Name', 'Country'], // Headers
+                        ['1', 'John Doe', 'USA'],  // Row 1
+                        ['2', 'Jane Smith', 'Canada'], // Row 2
+                        ['3', 'Foo Bar', 'UK'],    // Row 3
+                    ],
+                });
+                //processes = await app.listNodeProcesses()
+                //table.setData(tr.helpers.convertToArrayOfArrays(processes))
+            } else if (app.vars.uiMode.main == "demo") {
+
+            }
+
+}
 
     },
     main:               async function  (  ) {
         let client = await tr.helpers.connectDb(config)
-        
+
         await app.screen.createScreen()
         await app.screen.changeMode()
     }
