@@ -43,9 +43,6 @@ let app = {
             //table.setData(tr.helpers.convertToArrayOfArrays(processes))
         },
         createProcessesPane: async function() {
-            await app.vars.dbConnection.query("insert into node_processes (process_name,process_status) values ($1,$2)",
-                [tr.helpers.uuidv4(),"READY"])
-
             let returnResults = await app.vars.dbConnection.query("select * from  node_processes")
 
             app.vars.uiTableOfNames = blessed.listtable({
