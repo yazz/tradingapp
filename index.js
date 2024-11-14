@@ -13,10 +13,39 @@ let app = {
         uiPaneTop:              null,
         uiPaneLeftMenu:         null,
         uiPaneMain:             null,
-        uiMode:                 {}
+        uiMode:                 {},
+        dbConnection:           null
     },
     panes: {
         createHomePane: async function() {
+            app.vars.uiTableOfNames = blessed.listtable({
+                parent: app.vars.uiPaneMain,
+                top: 'center',
+                left: 'center',
+                width: '80%',
+                height: '50%',
+                border: {type: 'line'},
+                align: 'center', // Align text in the cells
+                style: {
+                    header: {fg: 'blue', bold: true},
+                    cell: {fg: 'white', selected: {bg: 'blue'}},
+                },
+                keys: true, // Allows navigation using arrow keys
+                mouse: true, // Allows interaction using the mouse
+                data: [
+                    ['ID', 'Name', 'Country'], // Headers
+                    ['1', 'John Doe', 'USA'],  // Row 1
+                    ['2', 'Jane Smith', 'Canada'], // Row 2
+                    ['3', 'Foo Bar', 'UK'],    // Row 3
+                ],
+            });
+            //processes = await app.listNodeProcesses()
+            //table.setData(tr.helpers.convertToArrayOfArrays(processes))
+        },
+        createProcessesPane: async function() {
+            await app.vars.dbConnection.query("insert into node_processes (process_name,process_status) values ($1,$2)",
+                [tr.helpers.uuidv4(),"READY"])
+
             app.vars.uiTableOfNames = blessed.listtable({
                 parent: app.vars.uiPaneMain,
                 top: 'center',
@@ -388,7 +417,7 @@ let app = {
             } else if (app.vars.uiMode.main == "demo") {
 
             } else if (app.vars.uiMode.main == "processes") {
-
+                await app.panes.createProcessesPane()
             } else if (app.vars.uiMode.main == "server") {
                 await app.panes.createServerPane()
             }
@@ -428,7 +457,7 @@ let app = {
         }
     },
     main:               async function  (  ) {
-        let client = await tr.helpers.connectDb(config)
+        app.vars.dbConnection = await tr.helpers.connectDb(config)
 
         await app.screen.createScreen()
         await app.screen.createBoxes()
