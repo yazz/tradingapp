@@ -456,9 +456,12 @@ let app = {
     main:               async function  (  ) {
         app.vars.dbConnection = await tr.helpers.connectDb(config)
 
-        await app.screen.createScreen()
-        await app.screen.createBoxes()
-        await app.screen.changeMode()
+        //await app.screen.createScreen()
+        //await app.screen.createBoxes()
+        //await app.screen.changeMode()
+
+        process.exit()
+
     }
 }
 
