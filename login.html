@@ -1,10 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" type="text/css" href="https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css">
     <meta charset="UTF-8">
     <title>Title</title>
-</head>
 <body>
   Login
+
+  <h2>Enter Your Password</h2>
+
+  <!-- Container for the W2UI form -->
+  <div id="password-form" style="width: 400px; margin: 20px;"></div>
+
+  <script  type="module">
+      import { w2grid } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
+      import { w2utils } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
+      import { w2form } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
+
+    // Define the form configuration for W2UI v2
+    let passwordForm = new w2form({
+      name: 'passwordForm',
+      box: '#password-form',
+      fields: [
+        {
+          field: 'password',
+          type: 'password',
+          required: true,
+          html: { label: 'Password' }
+        }
+      ],
+      actions: {
+        submit: function () {
+          const formData = this.record;
+          console.log("Password entered:", formData.password);
+          alert("Password submitted!");
+        }
+      }
+    });
+
+    // Render the form
+    passwordForm.render();
+  </script>
+
 </body>
 </html>
