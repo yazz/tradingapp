@@ -4,6 +4,7 @@ const   ps                  = require('ps-node');
 let     tr                  = require('./helpers.js')
 var     blessed             = require('blessed');
 const express = require('express')
+const path = require('path')
 const expressApp = express()
 const port = 3000
 
@@ -464,14 +465,20 @@ let app = {
         //await app.screen.createBoxes()
         //await app.screen.changeMode()
 
-        expressApp.get('/', (req, res) => {
-            res.send('Hello World!')
-        })
+        //expressApp.get('/', (req, res) => {
+        //    res.send('Hello World!')
+        //})
 
         expressApp.listen(port, () => {
             console.log(`Example app listening on port ${port}`)
         })
 
+        console.log(path.join(__dirname, '/login.html'))
+        expressApp.use(
+                "/a"
+                ,
+                express.static(path.join(__dirname, '/login.html'))
+        );
         //process.exit()
 
     }
