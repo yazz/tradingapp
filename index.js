@@ -3,6 +3,10 @@ const   { Client }          = require('pg');
 const   ps                  = require('ps-node');
 let     tr                  = require('./helpers.js')
 var     blessed             = require('blessed');
+const express = require('express')
+const expressApp = express()
+const port = 3000
+
 
 const config                = JSON.parse(fs.readFileSync('config.json', 'utf8'));
 
@@ -460,7 +464,15 @@ let app = {
         //await app.screen.createBoxes()
         //await app.screen.changeMode()
 
-        process.exit()
+        expressApp.get('/', (req, res) => {
+            res.send('Hello World!')
+        })
+
+        expressApp.listen(port, () => {
+            console.log(`Example app listening on port ${port}`)
+        })
+
+        //process.exit()
 
     }
 }
