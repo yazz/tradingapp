@@ -46,6 +46,8 @@ let app = {
             await app.vars.dbConnection.query("insert into node_processes (process_name,process_status) values ($1,$2)",
                 [tr.helpers.uuidv4(),"READY"])
 
+            let returnResults = await app.vars.dbConnection.query("select * from  node_processes")
+
             app.vars.uiTableOfNames = blessed.listtable({
                 parent: app.vars.uiPaneMain,
                 top: 'center',
@@ -61,14 +63,12 @@ let app = {
                 keys: true, // Allows navigation using arrow keys
                 mouse: true, // Allows interaction using the mouse
                 data: [
-                    ['ID', 'Name', 'Country'], // Headers
-                    ['1', 'John Doe', 'USA'],  // Row 1
-                    ['2', 'Jane Smith', 'Canada'], // Row 2
-                    ['3', 'Foo Bar', 'UK'],    // Row 3
                 ],
             });
-            //processes = await app.listNodeProcesses()
-            //table.setData(tr.helpers.convertToArrayOfArrays(processes))
+            //console.log(returnResults.rows)
+            let uiDContent = tr.helpers.convertToArrayOfArrays(returnResults.rows)
+            //console.log(uiDContent)
+            app.vars.uiTableOfNames.setData(uiDContent)
         },
         createServerPane: async function() {
             //
