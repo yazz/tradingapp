@@ -3,6 +3,9 @@ import { w2utils } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.
 import { w2form } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
 
 export default {
+    vars: {
+        loggedIn: false
+    },
     main: async function() {
         let ta = this
         let passwordForm = new w2form({
@@ -19,9 +22,13 @@ export default {
             actions: {
                 submit: async function () {
                     const formData = this.record;
-                    console.log("Password entered:", formData.password);
-                    let ret = await ta.getFromYazzReturnJson("calltest")
-                    alert("Password submitted!" + JSON.stringify(ret));
+                    let ret = await ta.getFromYazzReturnJson("login", {password: formData.password})
+                    if (ret.loggedIn) {
+                        ta.vars.loggedIn = true
+                        alert("Logged in")
+                    } else {
+                        alert("Wrong password")
+                    }
                 }
             }
         });

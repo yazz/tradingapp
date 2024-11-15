@@ -483,14 +483,21 @@ let app2 = {
         app.use('/js', express.static(path.join(__dirname, 'js')));
         //process.exit()
 
-        app.get(    '/calltest',                 async function (req, res, next) {
-            //let maxMasterMillis     = req.query.max_master_millis
+        app.get(    '/login',                 async function (req, res, next) {
+            let enteredPassword    = req.query.password
+            console.log("enteredPassword: " + enteredPassword)
+            let actualPassword = config.web.website_password
+
+            let retVal = {}
+            if (enteredPassword == actualPassword) {
+                retVal.loggedIn = true
+            } else {
+                retVal.error = "Invalid password"
+            }
 
             //let listOfHashes = await yz.getReleasedHashesAfterTimestamp( dbsearch  ,  maxMasterMillis )
             res.writeHead(200, {'Content-Type': 'application/json'});
-            res.end(JSON.stringify(
-                {value: "Returned from calltest"}
-            ));
+            res.end(JSON.stringify(retVal));
         })
     }
 }
