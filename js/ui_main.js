@@ -20,8 +20,8 @@ export default {
                 submit: async function () {
                     const formData = this.record;
                     console.log("Password entered:", formData.password);
-                    await ta.getFromYazzReturnJson("calltest")
-                    alert("Password submitted!");
+                    let ret = await ta.getFromYazzReturnJson("calltest")
+                    alert("Password submitted!" + JSON.stringify(ret));
                 }
             }
         });

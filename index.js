@@ -5,13 +5,13 @@ let     tr                  = require('./helpers.js')
 var     blessed             = require('blessed');
 const express = require('express')
 const path = require('path')
-const expressApp = express()
+const app = express()
 const port = 3000
 
 
 const config                = JSON.parse(fs.readFileSync('config.json', 'utf8'));
 
-let app = {
+let app2 = {
     vars: {
         screen:                 null,
         uiTableOfNames:         null,
@@ -23,8 +23,8 @@ let app = {
     },
     panes: {
         createHomePane: async function() {
-            app.vars.uiTableOfNames = blessed.listtable({
-                parent: app.vars.uiPaneMain,
+            app2.vars.uiTableOfNames = blessed.listtable({
+                parent: app2.vars.uiPaneMain,
                 top: 'center',
                 left: 'center',
                 width: '80%',
@@ -44,14 +44,14 @@ let app = {
                     ['3', 'Foo Bar', 'UK'],    // Row 3
                 ],
             });
-            //processes = await app.listNodeProcesses()
+            //processes = await app2.listNodeProcesses()
             //table.setData(tr.helpers.convertToArrayOfArrays(processes))
         },
         createProcessesPane: async function() {
-            let returnResults = await app.vars.dbConnection.query("select * from  node_processes")
+            let returnResults = await app2.vars.dbConnection.query("select * from  node_processes")
 
-            app.vars.uiTableOfNames = blessed.listtable({
-                parent: app.vars.uiPaneMain,
+            app2.vars.uiTableOfNames = blessed.listtable({
+                parent: app2.vars.uiPaneMain,
                 top: 'center',
                 left: 'center',
                 width: '80%',
@@ -70,15 +70,15 @@ let app = {
             //console.log(returnResults.rows)
             let uiDContent = tr.helpers.convertToArrayOfArrays(returnResults.rows)
             //console.log(uiDContent)
-            app.vars.uiTableOfNames.setData(uiDContent)
+            app2.vars.uiTableOfNames.setData(uiDContent)
         },
         createServerPane: async function() {
             //
             // server button
             //
-            app.vars.uiPaneMain.setContent("Server")
+            app2.vars.uiPaneMain.setContent("Server")
             const serverRunningButton = blessed.button({
-                parent: app.vars.uiPaneMain,  // Attach button to the box
+                parent: app2.vars.uiPaneMain,  // Attach button to the box
                 mouse: true,
                 keys: true,
                 shrink: true,
@@ -102,13 +102,13 @@ let app = {
                 },
             });
             serverRunningButton.on('mousedown', async function () {
-                let ret = await app.processes.isMainServerRunning()
+                let ret = await app2.processes.isMainServerRunning()
                 console.log("Server running: " + ret)
 
             })
 
             const killServerButton = blessed.button({
-                parent: app.vars.uiPaneMain,  // Attach button to the box
+                parent: app2.vars.uiPaneMain,  // Attach button to the box
                 mouse: true,
                 keys: true,
                 shrink: true,
@@ -132,12 +132,12 @@ let app = {
                 },
             });
             killServerButton.on('mousedown', async function () {
-                await app.processes.killMainServer()
+                await app2.processes.killMainServer()
             })
 
 
             const startServerButton = blessed.button({
-                parent: app.vars.uiPaneMain,  // Attach button to the box
+                parent: app2.vars.uiPaneMain,  // Attach button to the box
                 mouse: true,
                 keys: true,
                 shrink: true,
@@ -161,7 +161,7 @@ let app = {
                 },
             });
             startServerButton.on('mousedown', async function () {
-                await app.processes.startMainServer()
+                await app2.processes.startMainServer()
             })
 
         }
@@ -169,36 +169,36 @@ let app = {
     screen: {
         createScreen:       async function() {
             // Create a screen object.
-            app.vars.screen = blessed.screen({
+            app2.vars.screen = blessed.screen({
                 smartCSR: true
             });
 
-            app.vars.screen.title = 'ZAlgoHedgeFund';
+            app2.vars.screen.title = 'ZAlgoHedgeFund';
         },
         setUpScreen:        async function() {
             // Quit on Escape, q, or Control-C.
-            app.vars.screen.key(['escape', 'q', 'C-c'], function (ch, key) {
+            app2.vars.screen.key(['escape', 'q', 'C-c'], function (ch, key) {
                 return process.exit(0);
             });
 
             // Focus our element.
-            app.vars.uiPaneTop.focus();
+            app2.vars.uiPaneTop.focus();
 
             // Render the screen.
-            app.vars.screen.render();
+            app2.vars.screen.render();
         },
         changeMode:         async function() {
-            await app.screen.reloadTopPane()
-            await app.screen.reloadLeftPane()
-            await app.screen.reloadMainPane()
+            await app2.screen.reloadTopPane()
+            await app2.screen.reloadLeftPane()
+            await app2.screen.reloadMainPane()
 
-            await app.screen.setUpScreen()
+            await app2.screen.setUpScreen()
         },
         createBoxes:        async function() {
             //
             // top pane
             //
-            app.vars.uiPaneLeftMenu = blessed.box({
+            app2.vars.uiPaneLeftMenu = blessed.box({
                 bottom: '0',
                 left: '0',
                 width: '20%',
@@ -219,13 +219,13 @@ let app = {
                     }
                 }
             });
-            app.vars.screen.append(app.vars.uiPaneLeftMenu);
+            app2.vars.screen.append(app2.vars.uiPaneLeftMenu);
 
 
             //
             // left pane
             //
-            app.vars.uiPaneMain = blessed.box({
+            app2.vars.uiPaneMain = blessed.box({
                 bottom: '0',
                 right: '0',
                 width: '80%',
@@ -246,14 +246,14 @@ let app = {
                     }
                 }
             });
-            app.vars.screen.append(app.vars.uiPaneMain);
+            app2.vars.screen.append(app2.vars.uiPaneMain);
 
         },
 
         reloadTopPane:      async function() {
 
             // Create a box perfectly centered horizontally and vertically.
-            app.vars.uiPaneTop = blessed.box({
+            app2.vars.uiPaneTop = blessed.box({
                 top: 'top',
                 left: 'left',
                 width: '100%',
@@ -274,11 +274,11 @@ let app = {
                     }
                 }
             });
-            app.vars.screen.append(app.vars.uiPaneTop);
+            app2.vars.screen.append(app2.vars.uiPaneTop);
 
             // Create a button
             const homeButton = blessed.button({
-                parent: app.vars.uiPaneTop,  // Attach button to the box
+                parent: app2.vars.uiPaneTop,  // Attach button to the box
                 mouse: true,
                 keys: true,
                 shrink: true,
@@ -302,8 +302,8 @@ let app = {
                 },
             });
             homeButton.on('mousedown', async function (data) {
-                app.vars.uiMode.main = "home"
-                await app.screen.changeMode()
+                app2.vars.uiMode.main = "home"
+                await app2.screen.changeMode()
             });
 
 
@@ -311,7 +311,7 @@ let app = {
             // demo button
             //
             const demoButton = blessed.button({
-                parent: app.vars.uiPaneTop,  // Attach button to the box
+                parent: app2.vars.uiPaneTop,  // Attach button to the box
                 mouse: true,
                 keys: true,
                 shrink: true,
@@ -335,8 +335,8 @@ let app = {
                 },
             });
             demoButton.on('mousedown', async function () {
-                app.vars.uiMode.main = "demo"
-                await app.screen.changeMode()
+                app2.vars.uiMode.main = "demo"
+                await app2.screen.changeMode()
             })
 
 
@@ -345,7 +345,7 @@ let app = {
             // processesButton button
             //
             const processesButton = blessed.button({
-                parent: app.vars.uiPaneTop,  // Attach button to the box
+                parent: app2.vars.uiPaneTop,  // Attach button to the box
                 mouse: true,
                 keys: true,
                 shrink: true,
@@ -369,8 +369,8 @@ let app = {
                 },
             });
             processesButton.on('mousedown', async function () {
-                app.vars.uiMode.main = "processes"
-                await app.screen.changeMode()
+                app2.vars.uiMode.main = "processes"
+                await app2.screen.changeMode()
             })
 
 
@@ -378,7 +378,7 @@ let app = {
             // serverButton button
             //
             const serverButton = blessed.button({
-                parent: app.vars.uiPaneTop,  // Attach button to the box
+                parent: app2.vars.uiPaneTop,  // Attach button to the box
                 mouse: true,
                 keys: true,
                 shrink: true,
@@ -402,26 +402,26 @@ let app = {
                 },
             });
             serverButton.on('mousedown', async function () {
-                app.vars.uiMode.main = "server"
-                await app.screen.changeMode()
+                app2.vars.uiMode.main = "server"
+                await app2.screen.changeMode()
             })
         },
         reloadLeftPane:     async function() {
 
-            if ((!app.vars.uiMode.main) || (app.vars.uiMode.main == "home")) {
-            } else if (app.vars.uiMode.main == "demo") {
+            if ((!app2.vars.uiMode.main) || (app2.vars.uiMode.main == "home")) {
+            } else if (app2.vars.uiMode.main == "demo") {
             }
         },
         reloadMainPane:     async function() {
-            app.vars.uiPaneMain.children.forEach(child => child.detach());
-            if ((!app.vars.uiMode.main) || (app.vars.uiMode.main == "home")) {
-                await app.panes.createHomePane()
-            } else if (app.vars.uiMode.main == "demo") {
+            app2.vars.uiPaneMain.children.forEach(child => child.detach());
+            if ((!app2.vars.uiMode.main) || (app2.vars.uiMode.main == "home")) {
+                await app2.panes.createHomePane()
+            } else if (app2.vars.uiMode.main == "demo") {
 
-            } else if (app.vars.uiMode.main == "processes") {
-                await app.panes.createProcessesPane()
-            } else if (app.vars.uiMode.main == "server") {
-                await app.panes.createServerPane()
+            } else if (app2.vars.uiMode.main == "processes") {
+                await app2.panes.createProcessesPane()
+            } else if (app2.vars.uiMode.main == "server") {
+                await app2.panes.createServerPane()
             }
 
 
@@ -447,7 +447,7 @@ let app = {
         },
         startMainServer: async function () {
             try {
-                if (await app.processes.isMainServerRunning()) {
+                if (await app2.processes.isMainServerRunning()) {
                     console.log("server already running")
                 } else {
                     let ret = await tr.helpers.execCommand("./zalgo_server")
@@ -459,30 +459,39 @@ let app = {
         }
     },
     main:               async function  (  ) {
-        app.vars.dbConnection = await tr.helpers.connectDb(config)
+        app2.vars.dbConnection = await tr.helpers.connectDb(config)
 
-        //await app.screen.createScreen()
-        //await app.screen.createBoxes()
-        //await app.screen.changeMode()
+        //await app2.screen.createScreen()
+        //await app2.screen.createBoxes()
+        //await app2.screen.changeMode()
 
         //expressApp.get('/', (req, res) => {
         //    res.send('Hello World!')
         //})
 
-        expressApp.listen(port, () => {
+        app.listen(port, () => {
             console.log(`Example app listening on port ${port}`)
         })
 
         console.log(path.join(__dirname, '/login.html'))
-        expressApp.use(
+        app.use(
                 "/a"
                 ,
                 express.static(path.join(__dirname, '/login.html'))
         );
 
-        expressApp.use('/js', express.static(path.join(__dirname, 'js')));
+        app.use('/js', express.static(path.join(__dirname, 'js')));
         //process.exit()
 
+        app.get(    '/calltest',                 async function (req, res, next) {
+            //let maxMasterMillis     = req.query.max_master_millis
+
+            //let listOfHashes = await yz.getReleasedHashesAfterTimestamp( dbsearch  ,  maxMasterMillis )
+            res.writeHead(200, {'Content-Type': 'application/json'});
+            res.end(JSON.stringify(
+                {value: "Returned from calltest"}
+            ));
+        })
     }
 }
 
@@ -491,4 +500,4 @@ let app = {
 
 
 
-app.main()
+app2.main()
