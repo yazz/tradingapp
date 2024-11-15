@@ -479,6 +479,8 @@ let app = {
                 ,
                 express.static(path.join(__dirname, '/login.html'))
         );
+
+        expressApp.use('/js', express.static(path.join(__dirname, 'js')));
         //process.exit()
 
     }
