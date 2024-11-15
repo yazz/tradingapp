@@ -3,6 +3,10 @@ const   { Client }          = require('pg');
 const   ps                  = require('ps-node');
 let     tr                  = require('./helpers.js')
 var     blessed             = require('blessed');
+let     cookieParser        = require('cookie-parser')
+let     uuidv1              = require('uuid').v1;
+
+
 const express = require('express')
 const path = require('path')
 const app = express()
@@ -11,7 +15,7 @@ const port = 3000
 
 const config                = JSON.parse(fs.readFileSync('config.json', 'utf8'));
 
-let app2 = {
+let tas = {
     vars: {
         screen:                 null,
         uiTableOfNames:         null,
@@ -23,8 +27,8 @@ let app2 = {
     },
     panes: {
         createHomePane: async function() {
-            app2.vars.uiTableOfNames = blessed.listtable({
-                parent: app2.vars.uiPaneMain,
+            tas.vars.uiTableOfNames = blessed.listtable({
+                parent: tas.vars.uiPaneMain,
                 top: 'center',
                 left: 'center',
                 width: '80%',
@@ -44,14 +48,14 @@ let app2 = {
                     ['3', 'Foo Bar', 'UK'],    // Row 3
                 ],
             });
-            //processes = await app2.listNodeProcesses()
+            //processes = await tas.listNodeProcesses()
             //table.setData(tr.helpers.convertToArrayOfArrays(processes))
         },
         createProcessesPane: async function() {
-            let returnResults = await app2.vars.dbConnection.query("select * from  node_processes")
+            let returnResults = await tas.vars.dbConnection.query("select * from  node_processes")
 
-            app2.vars.uiTableOfNames = blessed.listtable({
-                parent: app2.vars.uiPaneMain,
+            tas.vars.uiTableOfNames = blessed.listtable({
+                parent: tas.vars.uiPaneMain,
                 top: 'center',
                 left: 'center',
                 width: '80%',
@@ -70,15 +74,15 @@ let app2 = {
             //console.log(returnResults.rows)
             let uiDContent = tr.helpers.convertToArrayOfArrays(returnResults.rows)
             //console.log(uiDContent)
-            app2.vars.uiTableOfNames.setData(uiDContent)
+            tas.vars.uiTableOfNames.setData(uiDContent)
         },
         createServerPane: async function() {
             //
             // server button
             //
-            app2.vars.uiPaneMain.setContent("Server")
+            tas.vars.uiPaneMain.setContent("Server")
             const serverRunningButton = blessed.button({
-                parent: app2.vars.uiPaneMain,  // Attach button to the box
+                parent: tas.vars.uiPaneMain,  // Attach button to the box
                 mouse: true,
                 keys: true,
                 shrink: true,
@@ -102,13 +106,13 @@ let app2 = {
                 },
             });
             serverRunningButton.on('mousedown', async function () {
-                let ret = await app2.processes.isMainServerRunning()
+                let ret = await tas.processes.isMainServerRunning()
                 console.log("Server running: " + ret)
 
             })
 
             const killServerButton = blessed.button({
-                parent: app2.vars.uiPaneMain,  // Attach button to the box
+                parent: tas.vars.uiPaneMain,  // Attach button to the box
                 mouse: true,
                 keys: true,
                 shrink: true,
@@ -132,12 +136,12 @@ let app2 = {
                 },
             });
             killServerButton.on('mousedown', async function () {
-                await app2.processes.killMainServer()
+                await tas.processes.killMainServer()
             })
 
 
             const startServerButton = blessed.button({
-                parent: app2.vars.uiPaneMain,  // Attach button to the box
+                parent: tas.vars.uiPaneMain,  // Attach button to the box
                 mouse: true,
                 keys: true,
                 shrink: true,
@@ -161,7 +165,7 @@ let app2 = {
                 },
             });
             startServerButton.on('mousedown', async function () {
-                await app2.processes.startMainServer()
+                await tas.processes.startMainServer()
             })
 
         }
@@ -169,36 +173,36 @@ let app2 = {
     screen: {
         createScreen:       async function() {
             // Create a screen object.
-            app2.vars.screen = blessed.screen({
+            tas.vars.screen = blessed.screen({
                 smartCSR: true
             });
 
-            app2.vars.screen.title = 'ZAlgoHedgeFund';
+            tas.vars.screen.title = 'ZAlgoHedgeFund';
         },
         setUpScreen:        async function() {
             // Quit on Escape, q, or Control-C.
-            app2.vars.screen.key(['escape', 'q', 'C-c'], function (ch, key) {
+            tas.vars.screen.key(['escape', 'q', 'C-c'], function (ch, key) {
                 return process.exit(0);
             });
 
             // Focus our element.
-            app2.vars.uiPaneTop.focus();
+            tas.vars.uiPaneTop.focus();
 
             // Render the screen.
-            app2.vars.screen.render();
+            tas.vars.screen.render();
         },
         changeMode:         async function() {
-            await app2.screen.reloadTopPane()
-            await app2.screen.reloadLeftPane()
-            await app2.screen.reloadMainPane()
+            await tas.screen.reloadTopPane()
+            await tas.screen.reloadLeftPane()
+            await tas.screen.reloadMainPane()
 
-            await app2.screen.setUpScreen()
+            await tas.screen.setUpScreen()
         },
         createBoxes:        async function() {
             //
             // top pane
             //
-            app2.vars.uiPaneLeftMenu = blessed.box({
+            tas.vars.uiPaneLeftMenu = blessed.box({
                 bottom: '0',
                 left: '0',
                 width: '20%',
@@ -219,13 +223,13 @@ let app2 = {
                     }
                 }
             });
-            app2.vars.screen.append(app2.vars.uiPaneLeftMenu);
+            tas.vars.screen.append(tas.vars.uiPaneLeftMenu);
 
 
             //
             // left pane
             //
-            app2.vars.uiPaneMain = blessed.box({
+            tas.vars.uiPaneMain = blessed.box({
                 bottom: '0',
                 right: '0',
                 width: '80%',
@@ -246,14 +250,14 @@ let app2 = {
                     }
                 }
             });
-            app2.vars.screen.append(app2.vars.uiPaneMain);
+            tas.vars.screen.append(tas.vars.uiPaneMain);
 
         },
 
         reloadTopPane:      async function() {
 
             // Create a box perfectly centered horizontally and vertically.
-            app2.vars.uiPaneTop = blessed.box({
+            tas.vars.uiPaneTop = blessed.box({
                 top: 'top',
                 left: 'left',
                 width: '100%',
@@ -274,11 +278,11 @@ let app2 = {
                     }
                 }
             });
-            app2.vars.screen.append(app2.vars.uiPaneTop);
+            tas.vars.screen.append(tas.vars.uiPaneTop);
 
             // Create a button
             const homeButton = blessed.button({
-                parent: app2.vars.uiPaneTop,  // Attach button to the box
+                parent: tas.vars.uiPaneTop,  // Attach button to the box
                 mouse: true,
                 keys: true,
                 shrink: true,
@@ -302,8 +306,8 @@ let app2 = {
                 },
             });
             homeButton.on('mousedown', async function (data) {
-                app2.vars.uiMode.main = "home"
-                await app2.screen.changeMode()
+                tas.vars.uiMode.main = "home"
+                await tas.screen.changeMode()
             });
 
 
@@ -311,7 +315,7 @@ let app2 = {
             // demo button
             //
             const demoButton = blessed.button({
-                parent: app2.vars.uiPaneTop,  // Attach button to the box
+                parent: tas.vars.uiPaneTop,  // Attach button to the box
                 mouse: true,
                 keys: true,
                 shrink: true,
@@ -335,8 +339,8 @@ let app2 = {
                 },
             });
             demoButton.on('mousedown', async function () {
-                app2.vars.uiMode.main = "demo"
-                await app2.screen.changeMode()
+                tas.vars.uiMode.main = "demo"
+                await tas.screen.changeMode()
             })
 
 
@@ -345,7 +349,7 @@ let app2 = {
             // processesButton button
             //
             const processesButton = blessed.button({
-                parent: app2.vars.uiPaneTop,  // Attach button to the box
+                parent: tas.vars.uiPaneTop,  // Attach button to the box
                 mouse: true,
                 keys: true,
                 shrink: true,
@@ -369,8 +373,8 @@ let app2 = {
                 },
             });
             processesButton.on('mousedown', async function () {
-                app2.vars.uiMode.main = "processes"
-                await app2.screen.changeMode()
+                tas.vars.uiMode.main = "processes"
+                await tas.screen.changeMode()
             })
 
 
@@ -378,7 +382,7 @@ let app2 = {
             // serverButton button
             //
             const serverButton = blessed.button({
-                parent: app2.vars.uiPaneTop,  // Attach button to the box
+                parent: tas.vars.uiPaneTop,  // Attach button to the box
                 mouse: true,
                 keys: true,
                 shrink: true,
@@ -402,26 +406,26 @@ let app2 = {
                 },
             });
             serverButton.on('mousedown', async function () {
-                app2.vars.uiMode.main = "server"
-                await app2.screen.changeMode()
+                tas.vars.uiMode.main = "server"
+                await tas.screen.changeMode()
             })
         },
         reloadLeftPane:     async function() {
 
-            if ((!app2.vars.uiMode.main) || (app2.vars.uiMode.main == "home")) {
-            } else if (app2.vars.uiMode.main == "demo") {
+            if ((!tas.vars.uiMode.main) || (tas.vars.uiMode.main == "home")) {
+            } else if (tas.vars.uiMode.main == "demo") {
             }
         },
         reloadMainPane:     async function() {
-            app2.vars.uiPaneMain.children.forEach(child => child.detach());
-            if ((!app2.vars.uiMode.main) || (app2.vars.uiMode.main == "home")) {
-                await app2.panes.createHomePane()
-            } else if (app2.vars.uiMode.main == "demo") {
+            tas.vars.uiPaneMain.children.forEach(child => child.detach());
+            if ((!tas.vars.uiMode.main) || (tas.vars.uiMode.main == "home")) {
+                await tas.panes.createHomePane()
+            } else if (tas.vars.uiMode.main == "demo") {
 
-            } else if (app2.vars.uiMode.main == "processes") {
-                await app2.panes.createProcessesPane()
-            } else if (app2.vars.uiMode.main == "server") {
-                await app2.panes.createServerPane()
+            } else if (tas.vars.uiMode.main == "processes") {
+                await tas.panes.createProcessesPane()
+            } else if (tas.vars.uiMode.main == "server") {
+                await tas.panes.createServerPane()
             }
 
 
@@ -447,7 +451,7 @@ let app2 = {
         },
         startMainServer: async function () {
             try {
-                if (await app2.processes.isMainServerRunning()) {
+                if (await tas.processes.isMainServerRunning()) {
                     console.log("server already running")
                 } else {
                     let ret = await tr.helpers.execCommand("./zalgo_server")
@@ -458,16 +462,24 @@ let app2 = {
             }
         }
     },
-    main:               async function  (  ) {
-        app2.vars.dbConnection = await tr.helpers.connectDb(config)
+    server: {
+        createCookieInDb: async function                          (  cookie ) {
+            //stmtInsertCookie.run(uuidv1(),timestampNow,"yazz",cookie,newSessionid, hostCookieSentTo, from_device_type)
+        }
 
-        //await app2.screen.createScreen()
-        //await app2.screen.createBoxes()
-        //await app2.screen.changeMode()
+    },
+    main:               async function  (  ) {
+        let tas = this
+        tas.vars.dbConnection = await tr.helpers.connectDb(config)
+
+        //await tas.screen.createScreen()
+        //await tas.screen.createBoxes()
+        //await tas.screen.changeMode()
 
         //expressApp.get('/', (req, res) => {
         //    res.send('Hello World!')
         //})
+        app.use(cookieParser());
 
         app.listen(port, () => {
             console.log(`Example app listening on port ${port}`)
@@ -491,6 +503,9 @@ let app2 = {
             let retVal = {}
             if (enteredPassword == actualPassword) {
                 retVal.loggedIn = true
+                let randomNumber = uuidv1()
+                res.cookie('tradingapp',randomNumber, { maxAge: 900000, httpOnly: false });
+                await tas.server.createCookieInDb(randomNumber)
             } else {
                 retVal.error = "Invalid password"
             }
@@ -507,4 +522,4 @@ let app2 = {
 
 
 
-app2.main()
+tas.main()

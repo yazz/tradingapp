@@ -6,7 +6,7 @@ export default {
     vars: {
         loggedIn: false
     },
-    main: async function() {
+    main:                               async function() {
         let ta = this
         let passwordForm = new w2form({
             name: 'passwordForm',
