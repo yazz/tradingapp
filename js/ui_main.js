@@ -32,7 +32,7 @@ export default {
             actions: {
                 submit: async function () {
                     const formData = this.record;
-                    let ret = await ta.getFromYazzReturnJson("login", {password: formData.password})
+                    let ret = await ta.helpers.getFromYazzReturnJson("login", {password: formData.password})
                     if (ret.loggedIn) {
                         ta.vars.loggedIn = true
                         console.log("Logged in")
@@ -58,39 +58,41 @@ export default {
         ta.vars.layout.render()
         ta.vars.layout.html("main",passwordForm);
     },
-    getFromYazzReturnJson:              async function              (  urlToget  ,  urlParams  ) {
-        let urlParamsWithoutNulls = {}
-        if (urlParams) {
-            for (let paramItemKey of Object.keys(urlParams)) {
-                if (this.isValidObject(urlParams[paramItemKey])) {
-                    urlParamsWithoutNulls[  paramItemKey  ] = urlParams[paramItemKey]
+    helpers: {
+        getFromYazzReturnJson:              async function              (  urlToget  ,  urlParams  )    {
+            let urlParamsWithoutNulls = {}
+            if (urlParams) {
+                for (let paramItemKey of Object.keys(urlParams)) {
+                    if (this.isValidObject(urlParams[paramItemKey])) {
+                        urlParamsWithoutNulls[  paramItemKey  ] = urlParams[paramItemKey]
+                    }
                 }
             }
-        }
-        let openfileurl = "http://127.0.0.1:3000/" + urlToget + "?" +
-            new URLSearchParams(urlParamsWithoutNulls)
+            let openfileurl = "http://127.0.0.1:3000/" + urlToget + "?" +
+                new URLSearchParams(urlParamsWithoutNulls)
 
-        let promise = new Promise(async function (returnfn) {
-            fetch(openfileurl, {
-                method: 'get',
-                credentials: "include"
+            let promise = new Promise(async function (returnfn) {
+                fetch(openfileurl, {
+                    method: 'get',
+                    credentials: "include"
+                })
+                    .then((response) => response.json())
+                    .then(async function (responseJson) {
+                        returnfn(responseJson)
+                    })
+                    .catch(err => {
+                        //error block
+                        returnfn()
+                    })
             })
-                .then((response) => response.json())
-                .then(async function (responseJson) {
-                    returnfn(responseJson)
-                })
-                .catch(err => {
-                    //error block
-                    returnfn()
-                })
-        })
-        let retval = await promise
-        return retval
-    },
-    isValidObject:                      function                    (   variable   )                                {
-        if ((typeof variable !== 'undefined') && (variable != null)) {
-            return true
+            let retval = await promise
+            return retval
+        },
+        isValidObject:                      function                    (  variable  )                  {
+            if ((typeof variable !== 'undefined') && (variable != null)) {
+                return true
+            }
+            return false
         }
-        return false
     }
 }
