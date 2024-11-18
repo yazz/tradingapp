@@ -5,7 +5,8 @@ import { w2layout } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6
 
 export default {
     vars: {
-        loggedIn: false
+        loggedIn: false,
+        layout: null
     },
     main:                               async function() {
         let ta = this
@@ -45,7 +46,7 @@ export default {
 
 
         let pstyle = 'border: 1px solid #efefef; padding: 5px'
-        let layout = new w2layout({
+        ta.vars.layout = new w2layout({
             box: '#w2ui_layout_html_element',
             name: 'layout',
             panels: [
@@ -54,10 +55,8 @@ export default {
                 { type: 'main', style: pstyle, html: 'main' }
             ]
         })
-        layout.render()
-        layout.html("main",passwordForm);
-debugger
-        layout.panels.main.content = passwordForm
+        ta.vars.layout.render()
+        ta.vars.layout.html("main",passwordForm);
     },
     getFromYazzReturnJson:              async function              (  urlToget  ,  urlParams  ) {
         let urlParamsWithoutNulls = {}
