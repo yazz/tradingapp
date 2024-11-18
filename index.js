@@ -475,6 +475,10 @@ let tas = {
                 return res.rows[0]
             }
             return null
+        },
+        setUserLoggedIn: async function                           (  cookie  ) {
+            await tas.vars.dbConnection.query("update cookies set logged_in = $1 where cookie_value = $2",
+                ["TRUE",cookie])
         }
     },
     main:               async function  (  ) {
@@ -569,6 +573,8 @@ let tas = {
         //process.exit()
 
         app.get(    '/login',                 async function (req, res, next) {
+            let cookie = req.cookies.tradingapp;
+
             let enteredPassword    = req.query.password
             console.log("enteredPassword: " + enteredPassword)
             let actualPassword = config.web.website_password
@@ -576,9 +582,7 @@ let tas = {
             let retVal = {}
             if (enteredPassword == actualPassword) {
                 retVal.loggedIn = true
-                let randomNumber = uuidv1()
-                res.cookie('tradingapp',randomNumber, { maxAge: 900000, httpOnly: false });
-                //await tas.server.createCookieInDb(randomNumber)
+                await tas.server.setUserLoggedIn(cookie)
             } else {
                 retVal.error = "Invalid password"
             }
