@@ -1,6 +1,7 @@
 import { w2grid } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
 import { w2utils } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
 import { w2form } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
+import { w2layout } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
 
 export default {
     vars: {
@@ -25,16 +26,27 @@ export default {
                     let ret = await ta.getFromYazzReturnJson("login", {password: formData.password})
                     if (ret.loggedIn) {
                         ta.vars.loggedIn = true
-                        alert("Logged in")
+                        console.log("Logged in")
                     } else {
-                        alert("Wrong password")
+                        console.log("Wrong password")
                     }
                 }
             }
         });
-
         // Render the form
         passwordForm.render();
+
+
+        let pstyle = 'border: 1px solid #efefef; padding: 5px'
+        new w2layout({
+            box: '#layout',
+            name: 'layout',
+            panels: [
+                { type: 'top', size: 50, style: pstyle, html: 'top' },
+                { type: 'left', size: 200, style: pstyle, html: 'left' },
+                { type: 'main', style: pstyle, html: 'main' }
+            ]
+        })
     },
     getFromYazzReturnJson:              async function              (  urlToget  ,  urlParams  ) {
         let urlParamsWithoutNulls = {}
