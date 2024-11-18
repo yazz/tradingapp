@@ -1,13 +1,13 @@
-import { w2grid } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
-import { w2utils } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
-import { w2form } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
+import { w2grid }   from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
+import { w2utils }  from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
+import { w2form }   from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
 import { w2layout } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
 
 export default {
     vars: {
-        loggedIn:   false,
-        layout:     null,
-        passwordForm: null
+        loggedIn:       false,
+        layout:         null,
+        passwordForm:   null
     },
     ui: {
         loadLoginForm: async function (ta) {
@@ -113,3 +113,8 @@ export default {
         }
     }
 }
+
+
+
+
+

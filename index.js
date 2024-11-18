@@ -481,6 +481,68 @@ let tas = {
         //})
         app.use(cookieParser());
 
+        app.use(async function (req, res, next) {
+            console.log("In app.use(async function (req, res, next) {")
+            let oneof = false;
+            if(req.headers.origin) {
+                res.header('Access-Control-Allow-Origin', req.headers.origin);
+                oneof = true;
+            }
+            if(req.headers['access-control-request-method']) {
+                res.header('Access-Control-Allow-Methods', req.headers['access-control-request-method']);
+                oneof = true;
+            }
+            if(req.headers['access-control-request-headers']) {
+                res.header('Access-Control-Allow-Headers', req.headers['access-control-request-headers']);
+                oneof = true;
+            }
+            if(oneof) {
+                res.header('Access-Control-Max-Age', 60 * 60 * 24 * 365);
+            }
+
+
+            // Set to true if you need the website to include cookies in the requests sent
+            // to the API (e.g. in case you use sessions)
+            res.setHeader('Access-Control-Allow-Credentials', true);
+
+
+            let userAgentString = req.headers['user-agent']
+            let hostCookieSentTo = req.host
+            let cookie = req.cookies.yazz;
+
+
+            let from_device_type = userAgentString
+            if (typeof userAgentString  !== 'undefined') {
+                if (typeof cookie === undefined) {
+                    // no: set a new cookie
+                    let randomNumber =  uuidv1()
+                    res.cookie('tradingapp',randomNumber, { maxAge: 900000, httpOnly: false });
+                    //await createCookieInDb(randomNumber, hostCookieSentTo, from_device_type)
+                    //console.log('cookie created successfully');
+                } else {
+                    // yes, cookie was already present
+                    //console.log('cookie exists', cookie);
+
+                    //
+                    // check if cookie exists in the DB. If not then set a new cookie
+                    //
+                    //let cookieRecord = await getCookieRecord(cookie)
+                    //if (cookieRecord == null) {
+                    //    let randomNumber =  uuidv1()
+                    //    res.cookie('yazz',randomNumber, { maxAge: 900000, httpOnly: false });
+                    //await createCookieInDb(randomNumber, hostCookieSentTo, from_device_type)
+                    //console.log('No cookie found in Yazz DB, cookie created successfully');
+                    //}
+
+                }
+            }
+
+
+
+            // Pass to next layer of middleware
+            next();
+        });
+
         app.listen(port, () => {
             console.log(`Example app listening on port ${port}`)
         })
@@ -514,6 +576,7 @@ let tas = {
             res.writeHead(200, {'Content-Type': 'application/json'});
             res.end(JSON.stringify(retVal));
         })
+
     }
 }
 
