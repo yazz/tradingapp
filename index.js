@@ -485,11 +485,11 @@ let tas = {
             console.log(`Example app listening on port ${port}`)
         })
 
-        console.log(path.join(__dirname, '/login.html'))
+        console.log(path.join(__dirname, '/trading_app.html'))
         app.use(
                 "/a"
                 ,
-                express.static(path.join(__dirname, '/login.html'))
+                express.static(path.join(__dirname, '/trading_app.html'))
         );
 
         app.use('/js', express.static(path.join(__dirname, 'js')));
