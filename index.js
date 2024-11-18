@@ -515,6 +515,7 @@ let tas = {
 
             let from_device_type = userAgentString
             if (typeof userAgentString  !== 'undefined') {
+                console.log("Browser cookie := " + cookie)
                 if (cookie === undefined) {
                     // no: set a new cookie
                     let randomNumber =  uuidv1()
@@ -569,7 +570,7 @@ let tas = {
                 retVal.loggedIn = true
                 let randomNumber = uuidv1()
                 res.cookie('tradingapp',randomNumber, { maxAge: 900000, httpOnly: false });
-                await tas.server.createCookieInDb(randomNumber)
+                //await tas.server.createCookieInDb(randomNumber)
             } else {
                 retVal.error = "Invalid password"
             }
