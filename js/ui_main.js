@@ -8,7 +8,7 @@ export default {
         loggedIn: false,
         layout: null
     },
-    main:                               async function() {
+    loadLoginForm:                      async function() {
         let ta = this
         let passwordForm = new w2form({
             name: 'passwordForm',
@@ -17,9 +17,9 @@ export default {
                     field: 'password_prompt',
                     type: 'custom',
                     html:
-                    {
-                        label:  'Enter your password',
-                    }
+                        {
+                            label:  'Enter your password',
+                        }
                 }
                 ,
                 {
@@ -42,9 +42,10 @@ export default {
                 }
             }
         });
-        // Render the form
-
-
+        ta.vars.layout.html("main",passwordForm);
+    },
+    main:                               async function() {
+        let ta = this
         let pstyle = 'border: 1px solid #efefef; padding: 5px'
         ta.vars.layout = new w2layout({
             box: '#w2ui_layout_html_element',
@@ -56,7 +57,7 @@ export default {
             ]
         })
         ta.vars.layout.render()
-        ta.vars.layout.html("main",passwordForm);
+        await ta.loadLoginForm()
     },
     helpers: {
         getFromYazzReturnJson:              async function              (  urlToget  ,  urlParams  )    {
