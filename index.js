@@ -467,8 +467,15 @@ let tas = {
             //stmtInsertCookie.run(uuidv1(),timestampNow,"yazz",cookie,newSessionid, hostCookieSentTo, from_device_type)
             await tas.vars.dbConnection.query("insert into   cookies  (cookie_name, cookie_value)  values  ($1,$2)",
                 ["tradingapp",cookie])
+        },
+        getCookieRecord: async function                           (  cookie  ) {
+            let res = await tas.vars.dbConnection.query("select * from cookies  where cookie_value = $1",
+                [cookie])
+            if (res.rows.length > 0) {
+                return res.rows[0]
+            }
+            return null
         }
-
     },
     main:               async function  (  ) {
         let tas = this
@@ -522,21 +529,22 @@ let tas = {
                     res.cookie('tradingapp',randomNumber, { maxAge: 900000, httpOnly: false });
                     await tas.server.createCookieInDb(randomNumber)
                     //console.log('cookie created successfully');
+
+
                 } else {
                     // yes, cookie was already present
-                    //console.log('cookie exists', cookie);
+                    console.log('cookie exists', cookie);
 
                     //
                     // check if cookie exists in the DB. If not then set a new cookie
                     //
-                    //let cookieRecord = await getCookieRecord(cookie)
-                    //if (cookieRecord == null) {
-                    //    let randomNumber =  uuidv1()
-                    //    res.cookie('yazz',randomNumber, { maxAge: 900000, httpOnly: false });
-                    //await createCookieInDb(randomNumber, hostCookieSentTo, from_device_type)
-                    //console.log('No cookie found in Yazz DB, cookie created successfully');
-                    //}
-
+                    let cookieRecord = await tas.server.getCookieRecord(cookie)
+                    if (cookieRecord == null) {
+                        let randomNumber =  uuidv1()
+                        res.cookie('tradingapp',randomNumber, { maxAge: 900000, httpOnly: false });
+                        await tas.server.createCookieInDb(randomNumber)
+                        console.log('No cookie found in Trading app DB, cookie created successfully');
+                    }
                 }
             }
 
