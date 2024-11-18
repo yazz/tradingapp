@@ -6,11 +6,12 @@ import { w2layout } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6
 export default {
     vars: {
         loggedIn:   false,
-        layout:     null
+        layout:     null,
+        passwordForm: null
     },
     ui: {
         loadLoginForm: async function (ta) {
-            let passwordForm = new w2form({
+            ta.vars.passwordForm = new w2form({
                 name: 'passwordForm',
                 fields: [
                     {
@@ -27,7 +28,16 @@ export default {
                         type: 'password',
                         required: true,
                         html: {label: 'Password'}
+                    },
+                    {
+                        field: 'error_field',
+                        type: 'custom',
+                        html:
+                            {
+                                label: '',
+                            }
                     }
+
                 ],
                 actions: {
                     submit: async function () {
@@ -39,11 +49,12 @@ export default {
                             ta.vars.layout.html("main", "");
                         } else {
                             console.log("Wrong password")
+                            ta.vars.passwordForm.setValue("error_field","<div style='color: red;'>Wrong password</div>")
                         }
                     }
                 }
             });
-            ta.vars.layout.html("main", passwordForm);
+            ta.vars.layout.html("main", ta.vars.passwordForm);
         },
         loadMainLayout: async function (ta) {
             let pstyle = 'border: 1px solid #efefef; padding: 5px'
