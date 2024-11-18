@@ -9,7 +9,7 @@ export default {
         layout: null
     },
     ui: {
-        loadLoginForm:                      async function(ta) {
+        loadLoginForm: async function (ta) {
             let passwordForm = new w2form({
                 name: 'passwordForm',
                 fields: [
@@ -18,7 +18,7 @@ export default {
                         type: 'custom',
                         html:
                             {
-                                label:  'Enter your password',
+                                label: 'Enter your password',
                             }
                     }
                     ,
@@ -26,7 +26,7 @@ export default {
                         field: 'password',
                         type: 'password',
                         required: true,
-                        html: { label: 'Password' }
+                        html: {label: 'Password'}
                     }
                 ],
                 actions: {
@@ -42,23 +42,24 @@ export default {
                     }
                 }
             });
-            ta.vars.layout.html("main",passwordForm);
+            ta.vars.layout.html("main", passwordForm);
         },
-        loadMainLayout:                      async function(ta) {
+        loadMainLayout: async function (ta) {
+            let pstyle = 'border: 1px solid #efefef; padding: 5px'
             ta.vars.layout = new w2layout({
                 box: '#w2ui_layout_html_element',
                 name: 'layout',
                 panels: [
-                    { type: 'top', size: 50, style: pstyle, html: 'top' },
-                    { type: 'left', size: 200, style: pstyle, html: 'left' },
-                    { type: 'main', style: pstyle, html: 'main' }
+                    {type: 'top', size: 50, style: pstyle, html: 'top'},
+                    {type: 'left', size: 200, style: pstyle, html: 'left'},
+                    {type: 'main', style: pstyle, html: 'main'}
                 ]
             })
             ta.vars.layout.render()
-        },
-    main:                               async function() {
+        }
+    },
+    main:                               async function(  )          {
         let ta = this
-        let pstyle = 'border: 1px solid #efefef; padding: 5px'
         await ta.ui.loadMainLayout(ta)
         await ta.ui.loadLoginForm(ta)
     },
