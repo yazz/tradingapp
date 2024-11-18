@@ -46,7 +46,7 @@ export default {
 
         let pstyle = 'border: 1px solid #efefef; padding: 5px'
         let layout = new w2layout({
-            box: '#layout',
+            box: '#w2ui_layout_html_element',
             name: 'layout',
             panels: [
                 { type: 'top', size: 50, style: pstyle, html: 'top' },
