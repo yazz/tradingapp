@@ -8,41 +8,42 @@ export default {
         loggedIn: false,
         layout: null
     },
-    loadLoginForm:                      async function() {
-        let ta = this
-        let passwordForm = new w2form({
-            name: 'passwordForm',
-            fields: [
-                {
-                    field: 'password_prompt',
-                    type: 'custom',
-                    html:
-                        {
-                            label:  'Enter your password',
+    forms: {
+        loadLoginForm:                      async function(ta) {
+            let passwordForm = new w2form({
+                name: 'passwordForm',
+                fields: [
+                    {
+                        field: 'password_prompt',
+                        type: 'custom',
+                        html:
+                            {
+                                label:  'Enter your password',
+                            }
+                    }
+                    ,
+                    {
+                        field: 'password',
+                        type: 'password',
+                        required: true,
+                        html: { label: 'Password' }
+                    }
+                ],
+                actions: {
+                    submit: async function () {
+                        const formData = this.record;
+                        let ret = await ta.helpers.getFromYazzReturnJson("login", {password: formData.password})
+                        if (ret.loggedIn) {
+                            ta.vars.loggedIn = true
+                            console.log("Logged in")
+                        } else {
+                            console.log("Wrong password")
                         }
-                }
-                ,
-                {
-                    field: 'password',
-                    type: 'password',
-                    required: true,
-                    html: { label: 'Password' }
-                }
-            ],
-            actions: {
-                submit: async function () {
-                    const formData = this.record;
-                    let ret = await ta.helpers.getFromYazzReturnJson("login", {password: formData.password})
-                    if (ret.loggedIn) {
-                        ta.vars.loggedIn = true
-                        console.log("Logged in")
-                    } else {
-                        console.log("Wrong password")
                     }
                 }
-            }
-        });
-        ta.vars.layout.html("main",passwordForm);
+            });
+            ta.vars.layout.html("main",passwordForm);
+        }
     },
     main:                               async function() {
         let ta = this
@@ -57,7 +58,7 @@ export default {
             ]
         })
         ta.vars.layout.render()
-        await ta.loadLoginForm()
+        await ta.forms.loadLoginForm(ta)
     },
     helpers: {
         getFromYazzReturnJson:              async function              (  urlToget  ,  urlParams  )    {
