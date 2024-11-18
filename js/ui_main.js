@@ -5,8 +5,8 @@ import { w2layout } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6
 
 export default {
     vars: {
-        loggedIn: false,
-        layout: null
+        loggedIn:   false,
+        layout:     null
     },
     ui: {
         loadLoginForm: async function (ta) {
@@ -36,6 +36,7 @@ export default {
                         if (ret.loggedIn) {
                             ta.vars.loggedIn = true
                             console.log("Logged in")
+                            ta.vars.layout.html("main", "");
                         } else {
                             console.log("Wrong password")
                         }
