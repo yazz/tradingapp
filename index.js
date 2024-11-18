@@ -465,6 +465,8 @@ let tas = {
     server: {
         createCookieInDb: async function                          (  cookie ) {
             //stmtInsertCookie.run(uuidv1(),timestampNow,"yazz",cookie,newSessionid, hostCookieSentTo, from_device_type)
+            await tas.vars.dbConnection.query("insert into   cookies  (cookie_name, cookie_value)  values  ($1,$2)",
+                ["tradingapp",cookie])
         }
 
     },
@@ -508,16 +510,16 @@ let tas = {
 
             let userAgentString = req.headers['user-agent']
             let hostCookieSentTo = req.host
-            let cookie = req.cookies.yazz;
+            let cookie = req.cookies.tradingapp;
 
 
             let from_device_type = userAgentString
             if (typeof userAgentString  !== 'undefined') {
-                if (typeof cookie === undefined) {
+                if (cookie === undefined) {
                     // no: set a new cookie
                     let randomNumber =  uuidv1()
                     res.cookie('tradingapp',randomNumber, { maxAge: 900000, httpOnly: false });
-                    //await createCookieInDb(randomNumber, hostCookieSentTo, from_device_type)
+                    await tas.server.createCookieInDb(randomNumber)
                     //console.log('cookie created successfully');
                 } else {
                     // yes, cookie was already present
