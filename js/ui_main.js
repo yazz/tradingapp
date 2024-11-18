@@ -11,8 +11,16 @@ export default {
         let ta = this
         let passwordForm = new w2form({
             name: 'passwordForm',
-            box: '#password-form',
             fields: [
+                {
+                    field: 'password_prompt',
+                    type: 'custom',
+                    html:
+                    {
+                        label:  'Enter your password',
+                    }
+                }
+                ,
                 {
                     field: 'password',
                     type: 'password',
@@ -34,11 +42,10 @@ export default {
             }
         });
         // Render the form
-        passwordForm.render();
 
 
         let pstyle = 'border: 1px solid #efefef; padding: 5px'
-        new w2layout({
+        let layout = new w2layout({
             box: '#layout',
             name: 'layout',
             panels: [
@@ -47,6 +54,10 @@ export default {
                 { type: 'main', style: pstyle, html: 'main' }
             ]
         })
+        layout.render()
+        layout.html("main",passwordForm);
+debugger
+        layout.panels.main.content = passwordForm
     },
     getFromYazzReturnJson:              async function              (  urlToget  ,  urlParams  ) {
         let urlParamsWithoutNulls = {}
