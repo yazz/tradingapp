@@ -6,17 +6,19 @@ import * as w2ui    from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6
 
 export default {
     vars: {
-        loggedIn:       false,
-        layout:         null,
-        passwordForm:   null,
-        toolbar:        null
+        loggedIn:                   false,
+        layout:                     null,
+        passwordForm:               null,
+        toolbar:                    null,
+        mainMenuOptionSelected:     "home"
     },
     ui: {
         loadHeader: async function (tau) {
             tau.vars.toolbar = new w2ui.w2toolbar({
                 name : 'myToolbar',
                 items: [
-                    { type: 'check',  id: 'item1', text: 'Check', img: 'icon-add', checked: true },
+                    { type: 'button',  id: 'home', text: 'Home', img: 'icon-add' },
+                    { type: 'button',  id: 'positions', text: 'Positions', img: 'icon-add' },
                     { type: 'break' },
                     { type: 'menu',   id: 'item2', text: 'Drop Down', img: 'icon-folder',
                         items: [
@@ -29,11 +31,36 @@ export default {
                     { type: 'radio',  id: 'item3',  group: '1', text: 'Radio 1', img: 'icon-page' },
                     { type: 'radio',  id: 'item4',  group: '1', text: 'Radio 2', img: 'icon-page' },
                     { type: 'spacer' },
-                ]
+                ],
+                onClick(event) {
+                    console.log('Button clicked:', event.target);
+                    // Handle specific button clicks
+                    switch (event.target) {
+                        case 'home':
+                            alert('Home button clicked!');
+                            break;
+                        case 'about':
+                            alert('About button clicked!');
+                            break;
+                        case 'logout':
+                            alert('Logging out...');
+                            break;
+                        default:
+                            console.log('Unknown button clicked');
+                    }
+                }
             })
             tau.vars.layout.html("top", tau.vars.toolbar);
             if (tau.vars.loggedIn) {
                 tau.vars.toolbar.items.push({ type: 'button',  id: 'logout',  text: 'Logout', img: 'icon-save' })
+            }
+
+            for (let item of tau.vars.toolbar.items) {
+                if (tau.vars.mainMenuOptionSelected == item.id) {
+                    item.checked = true
+                } else {
+                    item.checked = false
+                }
             }
 
         },
