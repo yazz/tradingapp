@@ -5,15 +5,15 @@ import { w2layout } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6
 import * as w2ui    from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
 
 export default {
-    vars: {
+    vars:   {
         loggedIn:                   false,
         layout:                     null,
         passwordForm:               null,
         toolbar:                    null,
         mainMenuOptionSelected:     "home"
     },
-    ui: {
-        loadHeader:         async function (  tau  ) {
+    ui:     {
+        loadHeader:                         async function (  tau  ) {
             tau.vars.toolbar = new w2ui.w2toolbar({
                 name : 'myToolbar',
                 items: [
@@ -66,11 +66,11 @@ export default {
             }
 
         },
-        refreshAllUi:       async function (  tau  ) {
+        refreshAllUi:                       async function (  tau  ) {
             await tau.ui.clearUi(tau)
             await tau.ui.loadHeader(tau)
             if (tau.vars.mainMenuOptionSelected == "home") {
-
+                await tau.ui.loadHomeForm(tau)
             } else {
                 await tau.ui.loadPositionsForm(tau)
             }
@@ -78,10 +78,10 @@ export default {
                 await tau.ui.loadLoginForm(tau)
             }
         },
-        clearUi:            async function (  tau  ) {
+        clearUi:                            async function (  tau  ) {
             tau.vars.layout.html("main", "")
         },
-        loadLoginForm:      async function (  tau  ) {
+        loadLoginForm:                      async function (  tau  ) {
             tau.vars.passwordForm = new w2form({
                 name: 'passwordForm',
                 fields: [
@@ -128,54 +128,34 @@ export default {
             });
             tau.vars.layout.html("main", tau.vars.passwordForm);
         },
-        loadPositionsForm:  async function (  tau  ) {
-            tau.vars.passwordForm = new w2form({
-                name: 'passwordForm',
-                fields: [
-                    {
-                        field: 'password_prompt',
-                        type: 'custom',
-                        html:
-                            {
-                                label: 'Enter your password',
-                            }
-                    }
-                    ,
-                    {
-                        field: 'password',
-                        type: 'password',
-                        required: true,
-                        html: {label: 'Password'}
-                    },
-                    {
-                        field: 'error_field',
-                        type: 'custom',
-                        html:
-                            {
-                                label: '',
-                            }
-                    }
-
-                ],
-                actions: {
-                    submit: async function () {
-                        const formData = this.record;
-                        let ret = await tau.helpers.getFromYazzReturnJson("login", {password: formData.password})
-                        if (ret.loggedIn) {
-                            tau.vars.loggedIn = true
-                            console.log("Logged in")
-                            tau.vars.layout.html("main", "");
-                            await tau.ui.refreshAllUi(tau)
-                        } else {
-                            console.log("Wrong password")
-                            tau.vars.passwordForm.setValue("error_field","<div style='color: red;'>Wrong password</div>")
-                        }
-                    }
-                }
-            });
-            tau.vars.layout.html("main", tau.vars.passwordForm);
+        loadHomeForm:                       async function (  tau  ) {
+            tau.vars.layout.html("main", "<h1>Welcome to the trading app! </h1>");
         },
-        loadMainLayout:     async function (  tau  ) {
+        loadPositionsForm:                  async function (  tau  )                                    {
+            let grid = new w2ui.w2grid({
+                name: 'grid',
+                box: '#grid',
+                columns: [
+                    { field: 'fname', text: 'First Name', size: '30%' },
+                    { field: 'lname', text: 'Last Name', size: '30%' },
+                    { field: 'email', text: 'Email', size: '40%' },
+                    { field: 'sdate', text: 'Start Date', size: '120px' }
+                ],
+                records: [
+                    { recid: 1, fname: 'John', lname: 'Doe', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+                    { recid: 2, fname: 'Stuart', lname: 'Motzart', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+                    { recid: 3, fname: 'Jin', lname: 'Franson', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+                    { recid: 4, fname: 'Susan', lname: 'Ottie', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+                    { recid: 5, fname: 'Kelly', lname: 'Silver', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+                    { recid: 6, fname: 'Francis', lname: 'Gatos', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+                    { recid: 7, fname: 'Mark', lname: 'Welldo', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+                    { recid: 8, fname: 'Thomas', lname: 'Bahh', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+                    { recid: 9, fname: 'Sergei', lname: 'Rach', email: 'jdoe@gmail.com', sdate: '4/3/2012' }
+                ]
+            })
+            tau.vars.layout.html("main", grid);
+        },
+        loadMainLayout:                     async function (  tau  )                                    {
             let pstyle = 'border: 1px solid #efefef; padding: 5px'
             tau.vars.layout = new w2layout({
                 box: '#w2ui_layout_html_element',
@@ -189,7 +169,7 @@ export default {
             tau.vars.layout.render()
         }
     },
-    main:                   async function(  )          {
+    main:                                   async function              (  )                            {
         let tau = this
         await tau.ui.loadMainLayout(tau)
         await tau.ui.refreshAllUi(tau)
