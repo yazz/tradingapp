@@ -32,15 +32,17 @@ export default {
                     { type: 'radio',  id: 'item4',  group: '1', text: 'Radio 2', img: 'icon-page' },
                     { type: 'spacer' },
                 ],
-                onClick(event) {
+                onClick: async function(event) {
                     console.log('Button clicked:', event.target);
                     // Handle specific button clicks
                     switch (event.target) {
                         case 'home':
-                            alert('Home button clicked!');
+                            tau.vars.mainMenuOptionSelected = "home"
+                            await tau.ui.refreshAllUi(tau)
                             break;
-                        case 'about':
-                            alert('About button clicked!');
+                        case 'positions':
+                            tau.vars.mainMenuOptionSelected = "positions"
+                            await tau.ui.refreshAllUi(tau)
                             break;
                         case 'logout':
                             alert('Logging out...');
