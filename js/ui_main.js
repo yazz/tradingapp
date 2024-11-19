@@ -45,7 +45,7 @@ export default {
                             await tau.ui.refreshAllUi(tau)
                             break;
                         case 'logout':
-                            alert('Logging out...');
+                            await tau.ui.logout(tau)
                             break;
                         default:
                             console.log('Unknown button clicked');
@@ -80,6 +80,10 @@ export default {
         },
         clearUi:                            async function (  tau  ) {
             tau.vars.layout.html("main", "")
+        },
+        logout:                             async function (  tau  ) {
+            tau.vars.loggedIn = false
+            await tau.ui.refreshAllUi(tau)
         },
         loadLoginForm:                      async function (  tau  ) {
             tau.vars.passwordForm = new w2form({
