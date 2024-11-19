@@ -29,10 +29,12 @@ export default {
                     { type: 'radio',  id: 'item3',  group: '1', text: 'Radio 1', img: 'icon-page' },
                     { type: 'radio',  id: 'item4',  group: '1', text: 'Radio 2', img: 'icon-page' },
                     { type: 'spacer' },
-                    { type: 'button',  id: 'item5',  text: 'Item 5', img: 'icon-save' }
                 ]
             })
             tau.vars.layout.html("top", tau.vars.toolbar);
+            if (tau.vars.loggedIn) {
+                tau.vars.toolbar.items.push({ type: 'button',  id: 'logout',  text: 'Logout', img: 'icon-save' })
+            }
 
         },
         refreshAllUi: async function (tau) {
