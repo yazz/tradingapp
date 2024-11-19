@@ -13,7 +13,7 @@ export default {
         mainMenuOptionSelected:     "home"
     },
     ui: {
-        loadHeader: async function (tau) {
+        loadHeader:         async function (  tau  ) {
             tau.vars.toolbar = new w2ui.w2toolbar({
                 name : 'myToolbar',
                 items: [
@@ -66,7 +66,7 @@ export default {
             }
 
         },
-        refreshAllUi: async function (tau) {
+        refreshAllUi:       async function (  tau  ) {
             await tau.ui.clearUi(tau)
             await tau.ui.loadHeader(tau)
             if (tau.vars.mainMenuOptionSelected == "home") {
@@ -78,10 +78,10 @@ export default {
                 await tau.ui.loadLoginForm(tau)
             }
         },
-        clearUi: async function (tau) {
+        clearUi:            async function (  tau  ) {
             tau.vars.layout.html("main", "")
         },
-        loadLoginForm: async function (tau) {
+        loadLoginForm:      async function (  tau  ) {
             tau.vars.passwordForm = new w2form({
                 name: 'passwordForm',
                 fields: [
@@ -128,7 +128,7 @@ export default {
             });
             tau.vars.layout.html("main", tau.vars.passwordForm);
         },
-        loadPositionsForm: async function (tau) {
+        loadPositionsForm:  async function (  tau  ) {
             tau.vars.passwordForm = new w2form({
                 name: 'passwordForm',
                 fields: [
@@ -175,7 +175,7 @@ export default {
             });
             tau.vars.layout.html("main", tau.vars.passwordForm);
         },
-        loadMainLayout: async function (tau) {
+        loadMainLayout:     async function (  tau  ) {
             let pstyle = 'border: 1px solid #efefef; padding: 5px'
             tau.vars.layout = new w2layout({
                 box: '#w2ui_layout_html_element',
@@ -189,7 +189,7 @@ export default {
             tau.vars.layout.render()
         }
     },
-    main:                               async function(  )          {
+    main:                   async function(  )          {
         let tau = this
         await tau.ui.loadMainLayout(tau)
         await tau.ui.refreshAllUi(tau)
