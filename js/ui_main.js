@@ -67,9 +67,68 @@ export default {
 
         },
         refreshAllUi: async function (tau) {
+            await tau.ui.clearUi(tau)
             await tau.ui.loadHeader(tau)
+            if (tau.vars.mainMenuOptionSelected == "home") {
+
+            } else {
+                await tau.ui.loadPositionsForm(tau)
+            }
+            if (!tau.vars.loggedIn) {
+                await tau.ui.loadLoginForm(tau)
+            }
+        },
+        clearUi: async function (tau) {
+            tau.vars.layout.html("main", "")
         },
         loadLoginForm: async function (tau) {
+            tau.vars.passwordForm = new w2form({
+                name: 'passwordForm',
+                fields: [
+                    {
+                        field: 'password_prompt',
+                        type: 'custom',
+                        html:
+                            {
+                                label: 'Enter your password',
+                            }
+                    }
+                    ,
+                    {
+                        field: 'password',
+                        type: 'password',
+                        required: true,
+                        html: {label: 'Password'}
+                    },
+                    {
+                        field: 'error_field',
+                        type: 'custom',
+                        html:
+                            {
+                                label: '',
+                            }
+                    }
+
+                ],
+                actions: {
+                    submit: async function () {
+                        const formData = this.record;
+                        let ret = await tau.helpers.getFromYazzReturnJson("login", {password: formData.password})
+                        if (ret.loggedIn) {
+                            tau.vars.loggedIn = true
+                            console.log("Logged in")
+                            tau.vars.layout.html("main", "");
+                            await tau.ui.refreshAllUi(tau)
+                        } else {
+                            console.log("Wrong password")
+                            tau.vars.passwordForm.setValue("error_field","<div style='color: red;'>Wrong password</div>")
+                        }
+                    }
+                }
+            });
+            tau.vars.layout.html("main", tau.vars.passwordForm);
+        },
+        loadPositionsForm: async function (tau) {
             tau.vars.passwordForm = new w2form({
                 name: 'passwordForm',
                 fields: [
@@ -133,7 +192,6 @@ export default {
     main:                               async function(  )          {
         let tau = this
         await tau.ui.loadMainLayout(tau)
-        await tau.ui.loadLoginForm(tau)
         await tau.ui.refreshAllUi(tau)
     },
     helpers: {
