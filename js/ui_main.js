@@ -12,8 +12,8 @@ export default {
         toolbar:        null
     },
     ui: {
-        loadHeader: async function (ta) {
-            ta.vars.toolbar = new w2ui.w2toolbar({
+        loadHeader: async function (tau) {
+            tau.vars.toolbar = new w2ui.w2toolbar({
                 name : 'myToolbar',
                 items: [
                     { type: 'check',  id: 'item1', text: 'Check', img: 'icon-add', checked: true },
@@ -32,14 +32,14 @@ export default {
                     { type: 'button',  id: 'item5',  text: 'Item 5', img: 'icon-save' }
                 ]
             })
-            ta.vars.layout.html("top", ta.vars.toolbar);
+            tau.vars.layout.html("top", tau.vars.toolbar);
 
         },
-        refreshAllUi: async function (ta) {
-            await ta.ui.loadHeader(ta)
+        refreshAllUi: async function (tau) {
+            await tau.ui.loadHeader(tau)
         },
-        loadLoginForm: async function (ta) {
-            ta.vars.passwordForm = new w2form({
+        loadLoginForm: async function (tau) {
+            tau.vars.passwordForm = new w2form({
                 name: 'passwordForm',
                 fields: [
                     {
@@ -70,24 +70,24 @@ export default {
                 actions: {
                     submit: async function () {
                         const formData = this.record;
-                        let ret = await ta.helpers.getFromYazzReturnJson("login", {password: formData.password})
+                        let ret = await tau.helpers.getFromYazzReturnJson("login", {password: formData.password})
                         if (ret.loggedIn) {
-                            ta.vars.loggedIn = true
+                            tau.vars.loggedIn = true
                             console.log("Logged in")
-                            ta.vars.layout.html("main", "");
-                            await ta.ui.refreshAllUi(ta)
+                            tau.vars.layout.html("main", "");
+                            await tau.ui.refreshAllUi(tau)
                         } else {
                             console.log("Wrong password")
-                            ta.vars.passwordForm.setValue("error_field","<div style='color: red;'>Wrong password</div>")
+                            tau.vars.passwordForm.setValue("error_field","<div style='color: red;'>Wrong password</div>")
                         }
                     }
                 }
             });
-            ta.vars.layout.html("main", ta.vars.passwordForm);
+            tau.vars.layout.html("main", tau.vars.passwordForm);
         },
-        loadMainLayout: async function (ta) {
+        loadMainLayout: async function (tau) {
             let pstyle = 'border: 1px solid #efefef; padding: 5px'
-            ta.vars.layout = new w2layout({
+            tau.vars.layout = new w2layout({
                 box: '#w2ui_layout_html_element',
                 name: 'layout',
                 panels: [
@@ -96,13 +96,14 @@ export default {
                     {type: 'main', style: pstyle, html: 'main'}
                 ]
             })
-            ta.vars.layout.render()
+            tau.vars.layout.render()
         }
     },
     main:                               async function(  )          {
-        let ta = this
-        await ta.ui.loadMainLayout(ta)
-        await ta.ui.loadLoginForm(ta)
+        let tau = this
+        await tau.ui.loadMainLayout(tau)
+        await tau.ui.loadLoginForm(tau)
+        await tau.ui.refreshAllUi(tau)
     },
     helpers: {
         getFromYazzReturnJson:              async function              (  urlToget  ,  urlParams  )    {
