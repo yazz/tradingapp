@@ -2,14 +2,42 @@ import { w2grid }   from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6
 import { w2utils }  from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
 import { w2form }   from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
 import { w2layout } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
+import * as w2ui    from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
 
 export default {
     vars: {
         loggedIn:       false,
         layout:         null,
-        passwordForm:   null
+        passwordForm:   null,
+        toolbar:        null
     },
     ui: {
+        loadHeader: async function (ta) {
+            ta.vars.toolbar = new w2ui.w2toolbar({
+                name : 'myToolbar',
+                items: [
+                    { type: 'check',  id: 'item1', text: 'Check', img: 'icon-add', checked: true },
+                    { type: 'break' },
+                    { type: 'menu',   id: 'item2', text: 'Drop Down', img: 'icon-folder',
+                        items: [
+                            { text: 'Item 1', img: 'icon-page' },
+                            { text: 'Item 2', img: 'icon-page' },
+                            { text: 'Item 3', img: 'icon-page' }
+                        ]
+                    },
+                    { type: 'break' },
+                    { type: 'radio',  id: 'item3',  group: '1', text: 'Radio 1', img: 'icon-page' },
+                    { type: 'radio',  id: 'item4',  group: '1', text: 'Radio 2', img: 'icon-page' },
+                    { type: 'spacer' },
+                    { type: 'button',  id: 'item5',  text: 'Item 5', img: 'icon-save' }
+                ]
+            })
+            ta.vars.layout.html("top", ta.vars.toolbar);
+
+        },
+        refreshAllUi: async function (ta) {
+            await ta.ui.loadHeader(ta)
+        },
         loadLoginForm: async function (ta) {
             ta.vars.passwordForm = new w2form({
                 name: 'passwordForm',
@@ -47,6 +75,7 @@ export default {
                             ta.vars.loggedIn = true
                             console.log("Logged in")
                             ta.vars.layout.html("main", "");
+                            await ta.ui.refreshAllUi(ta)
                         } else {
                             console.log("Wrong password")
                             ta.vars.passwordForm.setValue("error_field","<div style='color: red;'>Wrong password</div>")
@@ -62,7 +91,7 @@ export default {
                 box: '#w2ui_layout_html_element',
                 name: 'layout',
                 panels: [
-                    {type: 'top', size: 50, style: pstyle, html: 'top'},
+                    {type: 'top', size: 50, style: pstyle, html: ''},
                     {type: 'left', size: 200, style: pstyle, html: 'left'},
                     {type: 'main', style: pstyle, html: 'main'}
                 ]
