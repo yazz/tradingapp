@@ -5,6 +5,7 @@ let     tr                  = require('./helpers.js')
 var     blessed             = require('blessed');
 let     cookieParser        = require('cookie-parser')
 let     uuidv1              = require('uuid').v1;
+let     fork                = require('node:child_process');
 
 
 const express = require('express')
@@ -23,7 +24,10 @@ let tas = {
         uiPaneLeftMenu:         null,
         uiPaneMain:             null,
         uiMode:                 {},
-        dbConnection:           null
+        dbConnection:           null,
+        processes:              {
+            getprices:          null
+        }
     },
     panes: {
         createHomePane: async function() {
@@ -433,7 +437,28 @@ let tas = {
 
     },
     processes: {
-        isMainServerRunning: async function () {
+        runGetPricesChildProcess:   async function (  tas  )    {
+            let getPricesPath = path.join(__dirname, '..\\get_prices.js')
+            tas.vars.processes.getprices = fork.fork(
+                getPricesPath,
+                [],
+                {
+                    execArgv: {},
+                    env: {}
+                });
+            /*forkedProcesses[exeProcName].send({  message_type:          "init" ,
+                user_data_path:        userData,
+                child_process_name:    exeProcName,
+                show_debug:            showDebug,
+                show_progress:         showProgress,
+                yazz_instance_id:      yazzInstanceId,
+                jaeger_collector:      jaegercollector,
+                env_vars:              envVars
+            });
+
+            forkedProcesses[processName].on('close', async function() {*/
+        },
+        isMainServerRunning:        async function (  )         {
             try {
                 let ret = await tr.helpers.execCommand("ps aux | grep -i zalgo_server | grep -v grep")
                 return true
@@ -441,7 +466,7 @@ let tas = {
                 return false
             }
         },
-        killMainServer: async function () {
+        killMainServer:             async function (  )         {
             try {
                 let ret = await tr.helpers.execCommand("pkill -9 -f zalgo_server ")
                 console.log("server killed")
@@ -449,7 +474,7 @@ let tas = {
                 console.log("Could not kill server")
             }
         },
-        startMainServer: async function () {
+        startMainServer:            async function (  )         {
             try {
                 if (await tas.processes.isMainServerRunning()) {
                     console.log("server already running")
@@ -590,6 +615,14 @@ let tas = {
             //let listOfHashes = await yz.getReleasedHashesAfterTimestamp( dbsearch  ,  maxMasterMillis )
             res.writeHead(200, {'Content-Type': 'application/json'});
             res.end(JSON.stringify(retVal));
+        })
+
+        app.get(    '/run_get_prices',                 async function (req, res, next) {
+            let cookie = req.cookies.tradingapp;
+            await tas.processes.runGetPricesChildProcess(tas)
+
+            res.writeHead(200, {'Content-Type': 'application/json'});
+            res.end(JSON.stringify({status: "ok"}));
         })
 
     }

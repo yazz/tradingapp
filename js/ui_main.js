@@ -89,7 +89,7 @@ export default {
                 ],
                 actions: {
                     GetPrices: async function() {
-                        alert("get prices")
+                        let ret = await tau.helpers.getFromYazzReturnJson("run_get_prices", {})
                     }
                 }
             })
