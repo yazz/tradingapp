@@ -19,17 +19,8 @@ export default {
                 items: [
                     { type: 'button',  id: 'home', text: 'Home', img: 'icon-add' },
                     { type: 'button',  id: 'positions', text: 'Positions', img: 'icon-add' },
+                    { type: 'button',  id: 'processes', text: 'Processes', img: 'icon-add' },
                     { type: 'break' },
-                    { type: 'menu',   id: 'item2', text: 'Drop Down', img: 'icon-folder',
-                        items: [
-                            { text: 'Item 1', img: 'icon-page' },
-                            { text: 'Item 2', img: 'icon-page' },
-                            { text: 'Item 3', img: 'icon-page' }
-                        ]
-                    },
-                    { type: 'break' },
-                    { type: 'radio',  id: 'item3',  group: '1', text: 'Radio 1', img: 'icon-page' },
-                    { type: 'radio',  id: 'item4',  group: '1', text: 'Radio 2', img: 'icon-page' },
                     { type: 'spacer' },
                 ],
                 onClick: async function(event) {
@@ -42,6 +33,10 @@ export default {
                             break;
                         case 'positions':
                             tau.vars.mainMenuOptionSelected = "positions"
+                            await tau.ui.refreshAllUi(tau)
+                            break;
+                        case 'processes':
+                            tau.vars.mainMenuOptionSelected = "processes"
                             await tau.ui.refreshAllUi(tau)
                             break;
                         case 'logout':
@@ -71,8 +66,10 @@ export default {
             await tau.ui.loadHeader(tau)
             if (tau.vars.mainMenuOptionSelected == "home") {
                 await tau.ui.loadHomeForm(tau)
-            } else {
+            } else if (tau.vars.mainMenuOptionSelected == "positions") {
                 await tau.ui.loadPositionsForm(tau)
+            } else if (tau.vars.mainMenuOptionSelected == "processes") {
+                await tau.ui.loadProcessesForm(tau)
             }
             if (!tau.vars.loggedIn) {
                 await tau.ui.loadLoginForm(tau)
@@ -84,6 +81,22 @@ export default {
         logout:                             async function (  tau  ) {
             tau.vars.loggedIn = false
             await tau.ui.refreshAllUi(tau)
+        },
+        loadProcessesForm:                  async function (  tau  ) {
+            let processesForm = new w2form({
+                name: 'processesForm',
+                fields: [
+                    {
+                        field: 'password_prompt',
+                        type: 'custom',
+                        html:
+                            {
+                                label: 'Processes',
+                            }
+                    }
+                ],
+            });
+            tau.vars.layout.html("main", processesForm);
         },
         loadLoginForm:                      async function (  tau  ) {
             tau.vars.passwordForm = new w2form({
