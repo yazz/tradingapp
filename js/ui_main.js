@@ -83,19 +83,16 @@ export default {
             await tau.ui.refreshAllUi(tau)
         },
         loadProcessesForm:                  async function (  tau  ) {
-            let processesForm = new w2form({
-                name: 'processesForm',
+            let processesForm = new w2ui.w2form({
+                name: 'myForm',
                 fields: [
-                    {
-                        field: 'password_prompt',
-                        type: 'custom',
-                        html:
-                            {
-                                label: 'Processes',
-                            }
-                    }
                 ],
-            });
+                actions: {
+                    GetPrices: async function() {
+                        alert("get prices")
+                    }
+                }
+            })
             tau.vars.layout.html("main", processesForm);
         },
         loadLoginForm:                      async function (  tau  ) {
