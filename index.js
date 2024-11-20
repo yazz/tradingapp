@@ -438,12 +438,12 @@ let tas = {
     },
     processes: {
         runGetPricesChildProcess:   async function (  tas  )    {
-            let getPricesPath = path.join(__dirname, '..\\get_prices.js')
+            let getPricesPath = path.join(__dirname, '/get_prices.js')
             tas.vars.processes.getprices = fork.fork(
                 getPricesPath,
                 [],
                 {
-                    execArgv: {},
+                    execArgv: [],
                     env: {}
                 });
             /*forkedProcesses[exeProcName].send({  message_type:          "init" ,
