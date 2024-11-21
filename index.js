@@ -6,6 +6,7 @@ var     blessed             = require('blessed');
 let     cookieParser        = require('cookie-parser')
 let     uuidv1              = require('uuid').v1;
 let     fork                = require('node:child_process');
+const { Worker, isMainThread, parentPort } = require('worker_threads');
 
 
 const express = require('express')
@@ -440,13 +441,16 @@ let tas = {
     processes:  {
         runGetPricesChildProcess:   async function (  tas  )    {
             let getPricesPath = path.join(__dirname, '/get_prices.js')
-            tas.vars.processes.getprices = fork.fork(
+            /*tas.vars.processes.getprices = fork.fork(
                 getPricesPath,
                 [],
                 {
                     execArgv: [],
                     env: {}
-                });
+                });*/
+            tas.vars.processes.getprices = new Worker(
+                getPricesPath,
+                );
             /*forkedProcesses[exeProcName].send({  message_type:          "init" ,
                 user_data_path:        userData,
                 child_process_name:    exeProcName,
