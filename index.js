@@ -27,9 +27,10 @@ let tas = {
         dbConnection:           null,
         processes:              {
             getprices:          null
-        }
+        },
+        debugMode:              null
     },
-    panes: {
+    panes:      {
         createHomePane: async function() {
             tas.vars.uiTableOfNames = blessed.listtable({
                 parent: tas.vars.uiPaneMain,
@@ -174,7 +175,7 @@ let tas = {
 
         }
     },
-    screen: {
+    screen:     {
         createScreen:       async function() {
             // Create a screen object.
             tas.vars.screen = blessed.screen({
@@ -436,7 +437,7 @@ let tas = {
         }
 
     },
-    processes: {
+    processes:  {
         runGetPricesChildProcess:   async function (  tas  )    {
             let getPricesPath = path.join(__dirname, '/get_prices.js')
             tas.vars.processes.getprices = fork.fork(
@@ -487,7 +488,7 @@ let tas = {
             }
         }
     },
-    server: {
+    server:     {
         createCookieInDb: async function                          (  cookie ) {
             //stmtInsertCookie.run(uuidv1(),timestampNow,"yazz",cookie,newSessionid, hostCookieSentTo, from_device_type)
             await tas.vars.dbConnection.query("insert into   cookies  (cookie_name, cookie_value)  values  ($1,$2)",
@@ -509,6 +510,7 @@ let tas = {
     main:               async function  (  ) {
         let tas = this
         tas.vars.dbConnection = await tr.helpers.connectDb(config)
+        tas.vars.debugMode = config.system.debug
 
         //await tas.screen.createScreen()
         //await tas.screen.createBoxes()
