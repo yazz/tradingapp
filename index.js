@@ -440,6 +440,10 @@ let tas = {
 
     },
     processes:  {
+        startAllProcesses:   async function (  tas  )    {
+            let listOfProcesses = Object.keys(tas.vars.processes)
+            debugger
+        },
         runGetPricesChildProcess:   async function (  tas  )    {
             let getPricesPath = path.join(__dirname, '/get_prices.js')
             /*tas.vars.processes.getprices = fork.fork(
@@ -449,6 +453,7 @@ let tas = {
                     execArgv: [],
                     env: {}
                 });*/
+
             tas.vars.processes.getprices.processHandle = new Worker(
                 getPricesPath,
                 );
@@ -640,6 +645,8 @@ let tas = {
             res.writeHead(200, {'Content-Type': 'application/json'});
             res.end(JSON.stringify({status: "ok"}));
         })
+
+        await tas.processes.startAllProcesses(  tas  )
 
     }
 }
