@@ -89,7 +89,7 @@ export default {
                 ],
                 actions: {
                     GetPrices: async function() {
-                        let ret = await tau.helpers.getFromYazzReturnJson("run_get_prices", {})
+                        let ret = await tau.helpers.httpGetReturnJson("run_get_prices", {})
                     }
                 }
             })
@@ -127,7 +127,7 @@ export default {
                 actions: {
                     submit: async function () {
                         const formData = this.record;
-                        let ret = await tau.helpers.getFromYazzReturnJson("login", {password: formData.password})
+                        let ret = await tau.helpers.httpGetReturnJson("login", {password: formData.password})
                         if (ret.loggedIn) {
                             tau.vars.loggedIn = true
                             console.log("Logged in")
@@ -189,7 +189,7 @@ export default {
         await tau.ui.refreshAllUi(tau)
     },
     helpers: {
-        getFromYazzReturnJson:              async function              (  urlToget  ,  urlParams  )    {
+        httpGetReturnJson:              async function              (urlToget  , urlParams  )    {
             let urlParamsWithoutNulls = {}
             if (urlParams) {
                 for (let paramItemKey of Object.keys(urlParams)) {
