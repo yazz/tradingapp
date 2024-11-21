@@ -510,7 +510,9 @@ let tas = {
     main:               async function  (  ) {
         let tas = this
         tas.vars.dbConnection = await tr.helpers.connectDb(config)
-        tas.vars.debugMode = config.system.debug
+        if (config.system) {
+            tas.vars.debugMode = config.system.debug
+        }
 
         //await tas.screen.createScreen()
         //await tas.screen.createBoxes()

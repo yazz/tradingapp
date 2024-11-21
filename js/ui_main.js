@@ -49,9 +49,9 @@ export default {
                 }
             })
             tau.vars.layout.html("top", tau.vars.toolbar);
-            debugger
+
             if (tau.vars.debugMode) {
-                tau.vars.toolbar.items.push({ type: 'button',  id: 'logout2',  text: 'Logout3', img: 'icon-save' })
+                tau.vars.toolbar.items.push({ type: 'button',  id: 'debugMode',  text: 'DEDBUG MODE ON', img: 'icon-save' })
             }
             if (tau.vars.loggedIn) {
                 tau.vars.toolbar.items.push({ type: 'button',  id: 'logout',  text: 'Logout', img: 'icon-save' })
