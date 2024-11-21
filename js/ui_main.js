@@ -49,6 +49,10 @@ export default {
                 }
             })
             tau.vars.layout.html("top", tau.vars.toolbar);
+            debugger
+            if (tau.vars.debugMode) {
+                tau.vars.toolbar.items.push({ type: 'button',  id: 'logout2',  text: 'Logout3', img: 'icon-save' })
+            }
             if (tau.vars.loggedIn) {
                 tau.vars.toolbar.items.push({ type: 'button',  id: 'logout',  text: 'Logout', img: 'icon-save' })
             }
@@ -187,14 +191,14 @@ export default {
     server: {
         loadInitSettings:                   async function (  tau  ) {
             let ret = await tau.helpers.httpGetReturnJson("get_init_settings")
-            debugger
             if (ret.value.debug) {
-                tau.vars.debugMode = tau.vars.debugMode
+                tau.vars.debugMode = ret.value.debug
             }
         }
     },
     main:                                   async function              (  )                            {
         let tau = this
+        debugger
         await tau.server.loadInitSettings(tau)
         await tau.ui.loadMainLayout(tau)
         await tau.ui.refreshAllUi(tau)
