@@ -10,7 +10,8 @@ export default {
         layout:                     null,
         passwordForm:               null,
         toolbar:                    null,
-        mainMenuOptionSelected:     "home"
+        mainMenuOptionSelected:     "home",
+        debugMode:                  false
     },
     ui:     {
         loadHeader:                         async function (  tau  ) {
@@ -183,8 +184,18 @@ export default {
             tau.vars.layout.render()
         }
     },
+    server: {
+        loadInitSettings:                   async function (  tau  ) {
+            let ret = await tau.helpers.httpGetReturnJson("get_init_settings")
+            debugger
+            if (ret.value.debug) {
+                tau.vars.debugMode = tau.vars.debugMode
+            }
+        }
+    },
     main:                                   async function              (  )                            {
         let tau = this
+        await tau.server.loadInitSettings(tau)
         await tau.ui.loadMainLayout(tau)
         await tau.ui.refreshAllUi(tau)
     },

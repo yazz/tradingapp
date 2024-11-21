@@ -619,6 +619,13 @@ let tas = {
             res.end(JSON.stringify(retVal));
         })
 
+
+        app.get(    '/get_init_settings',                 async function (req, res, next) {
+            let cookie = req.cookies.tradingapp;
+            res.writeHead(200, {'Content-Type': 'application/json'});
+            res.end(JSON.stringify({status: "ok" , value: {debug: tas.vars.debugMode} }));
+        })
+
         app.get(    '/run_get_prices',                 async function (req, res, next) {
             let cookie = req.cookies.tradingapp;
             await tas.processes.runGetPricesChildProcess(tas)
