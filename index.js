@@ -26,8 +26,9 @@ let tas = {
         uiPaneMain:             null,
         uiMode:                 {},
         dbConnection:           null,
-        processes:              {
-            getprices:          null
+        processes:
+        {
+            getprices:              {processHandle: null, status: null, fileName: "get_prices.js"}
         },
         debugMode:              null
     },
@@ -448,7 +449,7 @@ let tas = {
                     execArgv: [],
                     env: {}
                 });*/
-            tas.vars.processes.getprices = new Worker(
+            tas.vars.processes.getprices.processHandle = new Worker(
                 getPricesPath,
                 );
             /*forkedProcesses[exeProcName].send({  message_type:          "init" ,
