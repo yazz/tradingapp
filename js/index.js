@@ -607,7 +607,7 @@ let tas = {
         app.use(
                 "/a"
                 ,
-                express.static(path.join(__dirname, '/trading_app.html'))
+                express.static(path.join(__dirname, '../trading_app.html'))
         );
 
         app.use('/js', express.static(path.join(__dirname, 'js')));
