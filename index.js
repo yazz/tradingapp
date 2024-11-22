@@ -438,6 +438,14 @@ let tas = {
     processes:  {
         startAllProcesses:   async function (  tas  )    {
             let listOfProcesses = Object.keys(tas.vars.processes)
+            debugger
+            for (let processItemName of listOfProcesses) {
+                let processItem = tas.vars.processes[processItemName]
+                let processPath = path.join(__dirname, '/' + processItem.fileName )
+                processItem.processHandle = new Worker(
+                    processPath,
+                );
+            }
         },
         runGetPricesChildProcess:   async function (  tas  )    {
             let getPricesPath = path.join(__dirname, '/get_prices.js')
