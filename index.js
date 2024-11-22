@@ -1,24 +1,21 @@
-const   fs                  = require('fs');
-const   { Client }          = require('pg');
-const   ps                  = require('ps-node');
-let     tr                  = require('./helpers.js')
-var     blessed             = require('blessed');
-let     cookieParser        = require('cookie-parser')
-let     uuidv1              = require('uuid').v1;
-let     fork                = require('node:child_process');
-const { Worker, isMainThread, parentPort } = require('worker_threads');
+const   fs                                      = require('fs');
+const   { Client }                              = require('pg');
+const   ps                                      = require('ps-node');
+let     tr                                      = require('./helpers.js')
+var     blessed                                 = require('blessed');
+let     cookieParser                            = require('cookie-parser')
+let     uuidv1                                  = require('uuid').v1;
+let     fork                                    = require('node:child_process');
+const   { Worker, isMainThread, parentPort }    = require('worker_threads');
+const   express                                 = require('express')
+const   path                                    = require('path')
 
-
-const express = require('express')
-const path = require('path')
-const app = express()
-const port = 3000
-
-
+const app                   = express()
+const port                  = 3000
 const config                = JSON.parse(fs.readFileSync('config.json', 'utf8'));
 
 let tas = {
-    vars: {
+    vars:       {
         screen:                 null,
         uiTableOfNames:         null,
         uiPaneTop:              null,
@@ -26,8 +23,7 @@ let tas = {
         uiPaneMain:             null,
         uiMode:                 {},
         dbConnection:           null,
-        processes:
-        {
+        processes:              {
             getprices:              {processHandle: null, status: null, fileName: "get_prices.js"}
         },
         debugMode:              null
@@ -442,7 +438,6 @@ let tas = {
     processes:  {
         startAllProcesses:   async function (  tas  )    {
             let listOfProcesses = Object.keys(tas.vars.processes)
-            debugger
         },
         runGetPricesChildProcess:   async function (  tas  )    {
             let getPricesPath = path.join(__dirname, '/get_prices.js')
@@ -650,10 +645,5 @@ let tas = {
 
     }
 }
-
-
-
-
-
 
 tas.main()
