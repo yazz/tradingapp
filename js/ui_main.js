@@ -160,16 +160,16 @@ export default {
                         type: 'custom',
                         html:
                             {
-                                html: '<pre id="customFieldDiv"></pre>',
+                                html: '<pre id="customFieldDiv" style="width:100%;"></pre>',
                             }
                     }
                 ],
                 actions: {
                     Calc: async function(  ) {
                         debugger
-                        let outText       = "# tokens   $USD/tok  Sell #   TOTAL USD   MARKET Val   sell all"
+                        let outText       = "# tokens   $USD/tok  Sell #   TOTAL USD   MARKET Val    Wait sell   sell all"
                         outText = outText + "\n"
-                        outText = outText + "--------   --------  ------   ---------   ----------   --------"
+                        outText = outText + "--------   --------  ------   ---------   ----------    ---------   --------"
                         let numberOfCoins = parseInt(this.record.token_supply)
                         let pr=parseFloat(parseFloat(cryptoForm.record.start_usd_token).toFixed(4))
                         let sellIncr=parseFloat(parseFloat(cryptoForm.record.sell_incr).toFixed(4))
@@ -187,6 +187,7 @@ export default {
                                 numberOfCoins = 0
                             }
                             numberOfCoins = numberOfCoins.toFixed(0)
+                            let initialSupply =  parseInt(this.record.token_supply)
                             sellAmountOfCoins = sellAmountOfCoins.toFixed(0)
                             pr = pr + sellIncr //(pr * 1.1).toFixed(3)
                             tot = tot + (pr * sellAmountOfCoins)
@@ -198,7 +199,8 @@ export default {
                                 ("" + sellAmountOfCoins).padEnd(7) +
                                 "  " + tot.toFixed(0).padEnd(10) +
                                 "  " + totVal.toFixed(0).padEnd(12) +
-                                "  " + tau.ui.formatter.format((totVal+tot).toFixed(0).padEnd(10))
+                                "  " + tau.ui.formatter.format((initialSupply * pr).toFixed(0).padEnd(12)) +
+                                "    " + tau.ui.formatter.format((totVal+tot).toFixed(0).padEnd(10))
                         }
 
                         $('#customFieldDiv').html(outText)
