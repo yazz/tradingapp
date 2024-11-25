@@ -205,10 +205,10 @@ export default {
                     }
                 }
             })
-            cryptoForm.record.token_supply          = 700000;
-            cryptoForm.record.sell_amount_tokens    = 10000;
+            cryptoForm.record.token_supply          = 148000;
+            cryptoForm.record.sell_amount_tokens    = 500;
             cryptoForm.record.start_usd_token       = .98
-            cryptoForm.record.sell_incr             = .02
+            cryptoForm.record.sell_incr             = .03
 
             tau.vars.layout.html("main", cryptoForm);
         },
