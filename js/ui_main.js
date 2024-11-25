@@ -16,6 +16,22 @@ export default {
         debugMode:                  false
     },
     ui:     {
+        formatter:                      new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+
+            // These options can be used to round to whole numbers.
+            trailingZeroDisplay: 'stripIfInteger'   // This is probably what most people
+                                                    // want. It will only stop printing
+                                                    // the fraction when the input
+                                                    // amount is a round number (int)
+                                                    // already. If that's not what you
+                                                    // need, have a look at the options
+                                                    // below.
+            //minimumFractionDigits: 0, // This suffices for whole numbers, but will
+            // print 2500.10 as $2,500.1
+            //maximumFractionDigits: 0, // Causes 2500.99 to be printed as $2,501
+        }),
         loadHeader:                         async function (  tau  ) {
             tau.vars.toolbar = new w2ui.w2toolbar({
                 name : 'myToolbar',
@@ -149,7 +165,7 @@ export default {
                     }
                 ],
                 actions: {
-                    Calc: async function() {
+                    Calc: async function(  ) {
                         debugger
                         let outText       = "# tokens   $USD/tok  Sell #   TOTAL USD   MARKET Val   sell all"
                         outText = outText + "\n"
@@ -157,7 +173,7 @@ export default {
                         let numberOfCoins = parseInt(this.record.token_supply)
                         let pr=parseFloat(parseFloat(cryptoForm.record.start_usd_token).toFixed(4))
                         let sellIncr=parseFloat(parseFloat(cryptoForm.record.sell_incr).toFixed(4))
-                        let maxTries = 100
+                        let maxTries = 1000
                         let tries = 0
                         let sellAmountOfCoins = parseInt(this.record.sell_amount_tokens)
                         let tot = 0
@@ -182,7 +198,7 @@ export default {
                                 ("" + sellAmountOfCoins).padEnd(7) +
                                 "  " + tot.toFixed(0).padEnd(10) +
                                 "  " + totVal.toFixed(0).padEnd(12) +
-                                "  " + (totVal+tot).toFixed(0).padEnd(10)
+                                "  " + tau.ui.formatter.format((totVal+tot).toFixed(0).padEnd(10))
                         }
 
                         $('#customFieldDiv').html(outText)
