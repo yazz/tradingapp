@@ -117,6 +117,13 @@ export default {
                     }
                     ,
                     {
+                        field: 'start_usd_token',
+                        type: 'text',
+                        required: true,
+                        html: {label: '$/token start'}
+                    }
+                    ,
+                    {
                         field: 'error_field',
                         type: 'custom',
                         html:
@@ -141,7 +148,7 @@ export default {
                         outText = outText + "\n"
                         outText = outText + "--------   --------  ------   ---------   ----------   --------"
                         let numberOfCoins = parseInt(this.record.token_supply)
-                        let pr=0.01
+                        let pr=parseFloat(parseFloat(cryptoForm.record.start_usd_token).toFixed(2))
                         let maxTries = 100
                         let tries = 0
                         let sellAmountOfCoins = parseInt(this.record.sell_amount_tokens)
@@ -174,8 +181,10 @@ export default {
                     }
                 }
             })
-            cryptoForm.record.token_supply = 700000;
-            cryptoForm.record.sell_amount_tokens = 10000;
+            cryptoForm.record.token_supply          = 700000;
+            cryptoForm.record.sell_amount_tokens    = 10000;
+            cryptoForm.record.start_usd_token       = .98
+
             tau.vars.layout.html("main", cryptoForm);
         },
         loadProcessesForm:                  async function (  tau  ) {
