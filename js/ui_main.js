@@ -18,9 +18,10 @@ export default {
             tau.vars.toolbar = new w2ui.w2toolbar({
                 name : 'myToolbar',
                 items: [
-                    { type: 'button',  id: 'home', text: 'Home', img: 'icon-add' },
-                    { type: 'button',  id: 'positions', text: 'Positions', img: 'icon-add' },
-                    { type: 'button',  id: 'processes', text: 'Processes', img: 'icon-add' },
+                    { type: 'button',  id: 'home',      text: 'Home',       img: 'icon-add' },
+                    { type: 'button',  id: 'positions', text: 'Positions',  img: 'icon-add' },
+                    { type: 'button',  id: 'processes', text: 'Processes',  img: 'icon-add' },
+                    { type: 'button',  id: 'crypto',    text: 'Crypto',     img: 'icon-add' },
                     { type: 'break' },
                     { type: 'spacer' },
                 ],
@@ -38,6 +39,10 @@ export default {
                             break;
                         case 'processes':
                             tau.vars.mainMenuOptionSelected = "processes"
+                            await tau.ui.refreshAllUi(tau)
+                            break;
+                        case 'crypto':
+                            tau.vars.mainMenuOptionSelected = "crypto"
                             await tau.ui.refreshAllUi(tau)
                             break;
                         case 'logout':
@@ -75,6 +80,10 @@ export default {
                 await tau.ui.loadPositionsForm(tau)
             } else if (tau.vars.mainMenuOptionSelected == "processes") {
                 await tau.ui.loadProcessesForm(tau)
+            } else if (tau.vars.mainMenuOptionSelected == "crypto") {
+                await tau.ui.loadPositionsForm(tau)
+            } else if (tau.vars.mainMenuOptionSelected == "crypto") {
+                await tau.ui.loadCryptoCalc(tau)
             }
             if (!tau.vars.loggedIn) {
                 await tau.ui.loadLoginForm(tau)
@@ -86,6 +95,19 @@ export default {
         logout:                             async function (  tau  ) {
             tau.vars.loggedIn = false
             await tau.ui.refreshAllUi(tau)
+        },
+        loadCryptoCalc:                     async function (  tau  ) {
+            let processesForm = new w2ui.w2form({
+                name: 'myForm',
+                fields: [
+                ],
+                actions: {
+                    GetPrices: async function() {
+                        let ret = await tau.helpers.httpGetReturnJson("run_get_prices", {})
+                    }
+                }
+            })
+            tau.vars.layout.html("main", processesForm);
         },
         loadProcessesForm:                  async function (  tau  ) {
             let processesForm = new w2ui.w2form({

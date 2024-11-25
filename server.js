@@ -7,7 +7,7 @@ const config                = JSON.parse(fs.readFileSync('config.json', 'utf8'))
 
 let app = {
     vars: {
-        processes: ["process_get_prices", "process_trade"],
+        processes: [],//["process_get_prices", "process_trade"],
         dbConnection:           null
     },
     createInitialProcessesInTable: async function() {

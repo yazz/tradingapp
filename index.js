@@ -24,8 +24,8 @@ let tas = {
         uiMode:                 {},
         dbConnection:           null,
         processes:              {
-            getprices:              {processHandle: null, status: null, fileName: "get_prices.js"},
-            dotrades:               {processHandle: null, status: null, fileName: "trade.js"}
+            //getprices:              {processHandle: null, status: null, fileName: "get_prices.js"},
+            //dotrades:               {processHandle: null, status: null, fileName: "trade.js"}
         },
         debugMode:              null
     },
@@ -439,7 +439,7 @@ let tas = {
     processes:  {
         startAllProcesses:   async function (  tas  )    {
             let listOfProcesses = Object.keys(tas.vars.processes)
-            debugger
+            //debugger
             for (let processItemName of listOfProcesses) {
                 let processItem = tas.vars.processes[processItemName]
                 let processPath = path.join(__dirname, '/' + processItem.fileName )
