@@ -58,7 +58,7 @@ export default {
             tau.vars.layout.html("top", tau.vars.toolbar);
 
             if (tau.vars.debugMode) {
-                tau.vars.toolbar.items.push({ type: 'button',  id: 'debugMode',  text: 'DEDBUG MODE ON', img: 'icon-save' })
+                tau.vars.toolbar.items.push({ type: 'button',  id: 'debugMode',  text: 'DEBUG MODE ON', img: 'icon-save' })
             }
             if (tau.vars.loggedIn) {
                 tau.vars.toolbar.items.push({ type: 'button',  id: 'logout',  text: 'Logout', img: 'icon-save' })
@@ -103,15 +103,6 @@ export default {
                 name: 'cryptoCalcForm',
                 fields: [
                     {
-                        field: 'output',
-                        type: 'custom',
-                        html:
-                            {
-                                html: '<div id="customFieldDiv">Initial Value</div>',
-                            }
-                    }
-                    ,
-                    {
                         field: 'token_supply',
                         type: 'text',
                         required: true,
@@ -131,6 +122,15 @@ export default {
                         html:
                             {
                                 label: '',
+                            }
+                    }
+                    ,
+                    {
+                        field: 'output',
+                        type: 'custom',
+                        html:
+                            {
+                                html: '<pre id="customFieldDiv"></pre>',
                             }
                     }
                 ],
