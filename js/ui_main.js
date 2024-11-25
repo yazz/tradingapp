@@ -167,9 +167,9 @@ export default {
                 actions: {
                     Calc: async function(  ) {
                         debugger
-                        let outText       = "# tokens   $USD/tok  Sell #   TOTAL USD   MARKET Val    Wait sell   sell all"
+                        let outText       = "# tokens   $USD/tok  Sell #   Sell $   TOTAL USD   MARKET Val    Wait sell   sell all"
                         outText = outText + "\n"
-                        outText = outText + "--------   --------  ------   ---------   ----------    ---------   --------"
+                        outText = outText + "--------   --------  ------   ------   ---------   ----------    ---------   --------"
                         let numberOfCoins = parseInt(this.record.token_supply)
                         let pr=parseFloat(parseFloat(cryptoForm.record.start_usd_token).toFixed(4))
                         let sellIncr=parseFloat(parseFloat(cryptoForm.record.sell_incr).toFixed(4))
@@ -197,6 +197,7 @@ export default {
                                 " " +
                                 ("" + ((pr * 100).toFixed(0)/100) ).padEnd(10) +
                                 ("" + sellAmountOfCoins).padEnd(7) +
+                                ("  " + sellAmountOfCoins * pr).padEnd(7) +
                                 "  " + tot.toFixed(0).padEnd(10) +
                                 "  " + totVal.toFixed(0).padEnd(12) +
                                 "  " + tau.ui.formatter.format((initialSupply * pr).toFixed(0).padEnd(12)) +
@@ -208,9 +209,9 @@ export default {
                 }
             })
             cryptoForm.record.token_supply          = 148000;
-            cryptoForm.record.sell_amount_tokens    = 500;
+            cryptoForm.record.sell_amount_tokens    = 1000;
             cryptoForm.record.start_usd_token       = .98
-            cryptoForm.record.sell_incr             = .03
+            cryptoForm.record.sell_incr             = .02
 
             tau.vars.layout.html("main", cryptoForm);
         },
