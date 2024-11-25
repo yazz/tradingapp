@@ -136,6 +136,7 @@ export default {
                 ],
                 actions: {
                     Calc: async function() {
+                        debugger
                         let outText       = "# tokens   $USD/tok  Sell #   TOTAL USD   MARKET Val   sell all"
                         outText = outText + "\n"
                         outText = outText + "--------   --------  ------   ---------   ----------   --------"
@@ -143,7 +144,7 @@ export default {
                         let pr=0.01
                         let maxTries = 100
                         let tries = 0
-                        let sellAmountOfCoins = parseInt(this.sell_amount_tokens)
+                        let sellAmountOfCoins = parseInt(this.record.sell_amount_tokens)
                         let tot = 0
                         let totVal = 0
                         while ((numberOfCoins > 1 )&& (tries < maxTries)){
