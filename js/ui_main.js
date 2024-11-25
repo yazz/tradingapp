@@ -124,6 +124,13 @@ export default {
                     }
                     ,
                     {
+                        field: 'sell_incr',
+                        type: 'text',
+                        required: true,
+                        html: {label: '$ Sell incr'}
+                    }
+                    ,
+                    {
                         field: 'error_field',
                         type: 'custom',
                         html:
@@ -148,7 +155,8 @@ export default {
                         outText = outText + "\n"
                         outText = outText + "--------   --------  ------   ---------   ----------   --------"
                         let numberOfCoins = parseInt(this.record.token_supply)
-                        let pr=parseFloat(parseFloat(cryptoForm.record.start_usd_token).toFixed(2))
+                        let pr=parseFloat(parseFloat(cryptoForm.record.start_usd_token).toFixed(4))
+                        let sellIncr=parseFloat(parseFloat(cryptoForm.record.sell_incr).toFixed(4))
                         let maxTries = 100
                         let tries = 0
                         let sellAmountOfCoins = parseInt(this.record.sell_amount_tokens)
@@ -164,7 +172,7 @@ export default {
                             }
                             numberOfCoins = numberOfCoins.toFixed(0)
                             sellAmountOfCoins = sellAmountOfCoins.toFixed(0)
-                            pr = pr + 0.01 //(pr * 1.1).toFixed(3)
+                            pr = pr + sellIncr //(pr * 1.1).toFixed(3)
                             tot = tot + (pr * sellAmountOfCoins)
                             totVal = (pr * numberOfCoins)
                             outText = outText + "\n"
@@ -184,6 +192,7 @@ export default {
             cryptoForm.record.token_supply          = 700000;
             cryptoForm.record.sell_amount_tokens    = 10000;
             cryptoForm.record.start_usd_token       = .98
+            cryptoForm.record.sell_incr             = .02
 
             tau.vars.layout.html("main", cryptoForm);
         },
