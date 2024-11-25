@@ -80,7 +80,7 @@ export default {
                 await tau.ui.loadPositionsForm(tau)
             } else if (tau.vars.mainMenuOptionSelected == "processes") {
                 await tau.ui.loadProcessesForm(tau)
-            } else if (tau.vars.mainMenuOptionSelected == "crypto") {
+            } else if (tau.vars.mainMenuOptionSelected == "positions") {
                 await tau.ui.loadPositionsForm(tau)
             } else if (tau.vars.mainMenuOptionSelected == "crypto") {
                 await tau.ui.loadCryptoCalc(tau)
@@ -97,17 +97,17 @@ export default {
             await tau.ui.refreshAllUi(tau)
         },
         loadCryptoCalc:                     async function (  tau  ) {
-            let processesForm = new w2ui.w2form({
-                name: 'myForm',
+            let cryptForm = new w2ui.w2form({
+                name: 'cryptoCalcForm',
                 fields: [
                 ],
                 actions: {
-                    GetPrices: async function() {
-                        let ret = await tau.helpers.httpGetReturnJson("run_get_prices", {})
+                    Calc: async function() {
+
                     }
                 }
             })
-            tau.vars.layout.html("main", processesForm);
+            tau.vars.layout.html("main", cryptForm);
         },
         loadProcessesForm:                  async function (  tau  ) {
             let processesForm = new w2ui.w2form({
