@@ -4,6 +4,8 @@ import { w2form }   from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6
 import { w2layout } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
 import * as w2ui    from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
 
+const $ = window.jQuery;
+
 export default {
     vars:   {
         loggedIn:                   false,
@@ -97,17 +99,41 @@ export default {
             await tau.ui.refreshAllUi(tau)
         },
         loadCryptoCalc:                     async function (  tau  ) {
-            let cryptForm = new w2ui.w2form({
+            let cryptoForm = new w2ui.w2form({
                 name: 'cryptoCalcForm',
                 fields: [
+                    {
+                        field: 'output',
+                        type: 'custom',
+                        html:
+                            {
+                                html: '<div id="customFieldDiv">Initial Value</div>',
+                            }
+                    }
+                    ,
+                    {
+                        field: 'password',
+                        type: 'password',
+                        required: true,
+                        html: {label: 'Password'}
+                    },
+                    {
+                        field: 'error_field',
+                        type: 'custom',
+                        html:
+                            {
+                                label: '',
+                            }
+                    }
                 ],
                 actions: {
                     Calc: async function() {
-
+                        let output = "Something changed"
+                        $('#customFieldDiv').html(output)
                     }
                 }
             })
-            tau.vars.layout.html("main", cryptForm);
+            tau.vars.layout.html("main", cryptoForm);
         },
         loadProcessesForm:                  async function (  tau  ) {
             let processesForm = new w2ui.w2form({
@@ -220,7 +246,7 @@ export default {
     },
     main:                                   async function              (  )                            {
         let tau = this
-        debugger
+        //debugger
         await tau.server.loadInitSettings(tau)
         await tau.ui.loadMainLayout(tau)
         await tau.ui.refreshAllUi(tau)
