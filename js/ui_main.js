@@ -112,11 +112,19 @@ export default {
                     }
                     ,
                     {
-                        field: 'password',
-                        type: 'password',
+                        field: 'token_supply',
+                        type: 'text',
                         required: true,
-                        html: {label: 'Password'}
-                    },
+                        html: {label: 'Token Supply'}
+                    }
+                    ,
+                    {
+                        field: 'sell_amount_tokens',
+                        type: 'text',
+                        required: true,
+                        html: {label: 'Sell Amount Tokens'}
+                    }
+                    ,
                     {
                         field: 'error_field',
                         type: 'custom',
@@ -128,11 +136,45 @@ export default {
                 ],
                 actions: {
                     Calc: async function() {
-                        let output = "Something changed"
-                        $('#customFieldDiv').html(output)
+                        let outText       = "# tokens   $USD/tok  Sell #   TOTAL USD   MARKET Val   sell all"
+                        outText = outText + "\n"
+                        outText = outText + "--------   --------  ------   ---------   ----------   --------"
+                        let numberOfCoins = parseInt(this.record.token_supply)
+                        let pr=0.01
+                        let maxTries = 100
+                        let tries = 0
+                        let sellAmountOfCoins = parseInt(this.sell_amount_tokens)
+                        let tot = 0
+                        let totVal = 0
+                        while ((numberOfCoins > 1 )&& (tries < maxTries)){
+                            tries ++
+                            sellAmountOfCoins = sellAmountOfCoins * 1.00
+                            numberOfCoins = (numberOfCoins - sellAmountOfCoins)
+                            if (numberOfCoins < 0 ) {
+                                sellAmountOfCoins = sellAmountOfCoins + numberOfCoins
+                                numberOfCoins = 0
+                            }
+                            numberOfCoins = numberOfCoins.toFixed(0)
+                            sellAmountOfCoins = sellAmountOfCoins.toFixed(0)
+                            pr = pr + 0.01 //(pr * 1.1).toFixed(3)
+                            tot = tot + (pr * sellAmountOfCoins)
+                            totVal = (pr * numberOfCoins)
+                            outText = outText + "\n"
+                            outText = outText + ("" + numberOfCoins).padEnd(10) +
+                                " " +
+                                ("" + ((pr * 100).toFixed(0)/100) ).padEnd(10) +
+                                ("" + sellAmountOfCoins).padEnd(7) +
+                                "  " + tot.toFixed(0).padEnd(10) +
+                                "  " + totVal.toFixed(0).padEnd(12) +
+                                "  " + (totVal+tot).toFixed(0).padEnd(10)
+                        }
+
+                        $('#customFieldDiv').html(outText)
                     }
                 }
             })
+            cryptoForm.record.token_supply = 700000;
+            cryptoForm.record.sell_amount_tokens = 10000;
             tau.vars.layout.html("main", cryptoForm);
         },
         loadProcessesForm:                  async function (  tau  ) {
