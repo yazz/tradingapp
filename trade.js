@@ -67,10 +67,12 @@ async function          main        (  ) {
                         await client.query("insert into trading_positions (stock_symbol,cost_usd,amount) values ($1,$2,$3)",
                             [RandomStock,0,0])
                     }
-                    currentPositions[RandomStock].shares ++
-                    currentPositions[RandomStock].cost += parseFloat(price.stock_open)
-                    cashBalance -= parseInt(price.stock_open)
-                    console.log(date.toDateString() + " BUY " + RandomStock + ": $" + price.stock_open + " ---- Cash $" + cashBalance + ", Stock $" + stockBalance + ", " + " = $" + totalBalance)
+                    if (currentPositions[RandomStock]) {
+                        currentPositions[RandomStock].shares++
+                        currentPositions[RandomStock].cost += parseFloat(price.stock_open)
+                        cashBalance -= parseInt(price.stock_open)
+                        console.log(date.toDateString() + " BUY " + RandomStock + ": $" + price.stock_open + " ---- Cash $" + cashBalance + ", Stock $" + stockBalance + ", " + " = $" + totalBalance)
+                    }
                 }
             }
         }
@@ -97,8 +99,12 @@ async function          main        (  ) {
 }
 
 (async function() {
-    client = await tr.helpers.connectDb(config)    
-    await main()
+    client = await tr.helpers.connectDb(config)
+    try {
+        await main()
+    } catch(err){
+        debugger
+    }
     console.log('Trading done');
     process.exit(0)
 })()

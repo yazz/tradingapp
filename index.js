@@ -25,7 +25,7 @@ let tas = {
         dbConnection:           null,
         processes:              {
             //getprices:              {processHandle: null, status: null, fileName: "get_prices.js"},
-            //dotrades:               {processHandle: null, status: null, fileName: "trade.js"}
+            dotrades:               {processHandle: null, status: null, fileName: "trade.js"}
         },
         debugMode:              null
     },
@@ -647,7 +647,6 @@ let tas = {
         app.get(    '/run_get_prices',        tas.server.browserRequests.getPricesRequest)
 
         await tas.processes.startAllProcesses(  tas  )
-
     }
 }
 
