@@ -540,7 +540,19 @@ let tas = {
                 res.writeHead(200, {'Content-Type': 'application/json'});
                 res.end(JSON.stringify(retVal));
             }
+            ,
+            initSettingsRequest: async function (req, res, next) {
+                let cookie = req.cookies.tradingapp;
+                res.writeHead(200, {'Content-Type': 'application/json'});
+                res.end(JSON.stringify({status: "ok" , value: {debug: tas.vars.debugMode} }));
+            },
+            getPricesRequest: async function (req, res, next) {
+                let cookie = req.cookies.tradingapp;
+                await tas.processes.runGetPricesChildProcess(tas)
 
+                res.writeHead(200, {'Content-Type': 'application/json'});
+                res.end(JSON.stringify({status: "ok"}));
+            }
         },
         setHttpHeader:      async function                              (req, res, next)    {
             console.log("In app.use(async function (req, res, next) {")
@@ -631,21 +643,8 @@ let tas = {
         //process.exit()
 
         app.get(    '/login',                 tas.server.browserRequests.loginRequest)
-
-
-        app.get(    '/get_init_settings',                 async function (req, res, next) {
-            let cookie = req.cookies.tradingapp;
-            res.writeHead(200, {'Content-Type': 'application/json'});
-            res.end(JSON.stringify({status: "ok" , value: {debug: tas.vars.debugMode} }));
-        })
-
-        app.get(    '/run_get_prices',                 async function (req, res, next) {
-            let cookie = req.cookies.tradingapp;
-            await tas.processes.runGetPricesChildProcess(tas)
-
-            res.writeHead(200, {'Content-Type': 'application/json'});
-            res.end(JSON.stringify({status: "ok"}));
-        })
+        app.get(    '/get_init_settings',     tas.server.browserRequests.initSettingsRequest)
+        app.get(    '/run_get_prices',        tas.server.browserRequests.getPricesRequest)
 
         await tas.processes.startAllProcesses(  tas  )
 
