@@ -196,8 +196,8 @@ export default {
                                 " " +
                                 ("" + ((pr * 100).toFixed(0)/100) ).padEnd(10) +
                                 ("" + sellAmountOfCoins).padEnd(7) +
-                                ("  " + sellAmountOfCoins * pr).padEnd(7) +
-                                "  " + tot.toFixed(0).padEnd(10) +
+                                ("  " + Math.floor(sellAmountOfCoins * pr)).padEnd(7) +
+                                "    " + tot.toFixed(0).padEnd(10) +
                                 "  " + totVal.toFixed(0).padEnd(12) +
                                 "  " + tau.ui.formatter.format((initialSupply * pr).toFixed(0).padEnd(12)) +
                                 "    " + tau.ui.formatter.format((totVal+tot).toFixed(0).padEnd(10))
