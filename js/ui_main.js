@@ -218,17 +218,21 @@ export default {
             tau.vars.layout.html("main", cryptoForm);
         },
         loadProcessesForm:                  async function (  tau  ) {
-            let processesForm = new w2ui.w2form({
-                name: 'myForm',
-                fields: [
+            let grid = new w2ui.w2grid({
+                name: 'grid',
+                box: '#grid',
+                columns: [
+                    { field: 'name', text: 'Name', size: '30%' },
+                    { field: 'status', text: 'Status', size: '30%' }
                 ],
-                actions: {
-                    GetPrices: async function() {
-                        let ret = await tau.helpers.httpGetReturnJson("run_get_prices", {})
-                    }
-                }
+                records: [
+                ]
             })
-            tau.vars.layout.html("main", processesForm);
+            tau.vars.layout.html("main", grid);
+
+            let ret = await tau.server.loadProcessStatuses( tau )
+            grid.records = ret.value
+            grid.reload()
         },
         loadLoginForm:                      async function (  tau  )                                    {
             tau.vars.passwordForm = new w2form({
@@ -324,6 +328,10 @@ export default {
             if (ret.value.debug) {
                 tau.vars.debugMode = ret.value.debug
             }
+        },
+        loadProcessStatuses:                async function (  tau  ) {
+            let ret = await tau.helpers.httpGetReturnJson("get_process_statuses")
+            return ret
         }
     },
     main:                                   async function (  )                                         {

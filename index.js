@@ -437,7 +437,7 @@ let tas = {
 
     },
     processes:  {
-        startAllProcesses:   async function (  tas  )    {
+        startAllProcesses:          async function (  tas  )    {
             let listOfProcesses = Object.keys(tas.vars.processes)
             //debugger
             for (let processItemName of listOfProcesses) {
@@ -521,7 +521,7 @@ let tas = {
                 ["TRUE",cookie])
         },
         browserRequests:    {
-            loginRequest: async function (req, res, next) {
+            loginRequest:               async function (req, res, next) {
                 let cookie = req.cookies.tradingapp;
 
                 let enteredPassword    = req.query.password
@@ -539,19 +539,32 @@ let tas = {
                 //let listOfHashes = await yz.getReleasedHashesAfterTimestamp( dbsearch  ,  maxMasterMillis )
                 res.writeHead(200, {'Content-Type': 'application/json'});
                 res.end(JSON.stringify(retVal));
-            }
-            ,
-            initSettingsRequest: async function (req, res, next) {
+            },
+            initSettingsRequest:        async function (req, res, next) {
                 let cookie = req.cookies.tradingapp;
                 res.writeHead(200, {'Content-Type': 'application/json'});
                 res.end(JSON.stringify({status: "ok" , value: {debug: tas.vars.debugMode} }));
             },
-            getPricesRequest: async function (req, res, next) {
+            getPricesRequest:           async function (req, res, next) {
                 let cookie = req.cookies.tradingapp;
                 await tas.processes.runGetPricesChildProcess(tas)
 
                 res.writeHead(200, {'Content-Type': 'application/json'});
                 res.end(JSON.stringify({status: "ok"}));
+            },
+            getProcessStatuses:         async function (req, res, next) {
+                let cookie = req.cookies.tradingapp;
+                let processes = []
+                for (let processName of Object.keys(tas.vars.processes)) {
+                    let process = tas.vars.processes[processName]
+                    processes.push({
+                        name:   process.fileName,
+                        status: null
+                    })
+                }
+
+                res.writeHead(200, {'Content-Type': 'application/json'});
+                res.end(JSON.stringify({status: "ok", value: processes}));
             }
         },
         setHttpHeader:      async function                              (req, res, next)    {
@@ -633,18 +646,15 @@ let tas = {
         })
 
         console.log(path.join(__dirname, '/trading_app.html'))
-        app.use(
-                "/a"
-                ,
-                express.static(path.join(__dirname, '/trading_app.html'))
-        );
-
+        app.use("/a",express.static(path.join(__dirname, '/trading_app.html')));
         app.use('/js', express.static(path.join(__dirname, 'js')));
-        //process.exit()
 
         app.get(    '/login',                 tas.server.browserRequests.loginRequest)
         app.get(    '/get_init_settings',     tas.server.browserRequests.initSettingsRequest)
         app.get(    '/run_get_prices',        tas.server.browserRequests.getPricesRequest)
+        app.get(    '/get_process_statuses',  tas.server.browserRequests.getProcessStatuses)
+
+
 
         await tas.processes.startAllProcesses(  tas  )
     }
