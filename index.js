@@ -24,7 +24,7 @@ let tas = {
         uiMode:                 {},
         dbConnection:           null,
         processes:              {
-            //getprices:              {processHandle: null, status: null, fileName: "get_prices.js"},
+            getprices:              {processHandle: null, status: null, fileName: "get_prices.js"},
             dotrades:               {processHandle: null, status: null, fileName: "trade.js"}
         },
         debugMode:              null
