@@ -161,6 +161,7 @@ export default {
                         html:
                             {
                                 html: '<pre id="customFieldDiv" style="width:100%;"></pre>',
+                                label: ''
                             }
                     }
                 ],
@@ -199,8 +200,8 @@ export default {
                                 ("  " + Math.floor(sellAmountOfCoins * pr)).padEnd(7) +
                                 "    " + tot.toFixed(0).padEnd(10) +
                                 "  " + totVal.toFixed(0).padEnd(12) +
-                                "  " + tau.ui.formatter.format((initialSupply * pr).toFixed(0).padEnd(12)) +
-                                "    " + tau.ui.formatter.format((totVal+tot).toFixed(0).padEnd(10))
+                                "  " + (tau.ui.formatter.format((initialSupply * pr).toFixed(0)).padEnd(12)) +
+                                "" + tau.ui.formatter.format((totVal+tot).toFixed(0).padEnd(10))
                         }
 
                         $('#customFieldDiv').html(outText)
