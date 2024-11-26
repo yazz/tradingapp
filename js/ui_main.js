@@ -190,6 +190,8 @@ export default {
                             let initialSupply =  parseInt(this.record.token_supply)
                             sellAmountOfCoins = sellAmountOfCoins.toFixed(0)
                             pr = pr + sellIncr //(pr * 1.1).toFixed(3)
+                            //debugger
+                            //pr = pr + parseFloat((pr * sellIncr).toFixed(3))
                             tot = tot + (pr * sellAmountOfCoins)
                             totVal = (pr * numberOfCoins)
                             outText = outText + "\n"
