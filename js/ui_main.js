@@ -166,7 +166,6 @@ export default {
                 ],
                 actions: {
                     Calc: async function(  ) {
-                        debugger
                         let outText       = "# tokens   $USD/tok  Sell #   Sell $   TOTAL USD   MARKET Val    Wait sell   sell all"
                         outText = outText + "\n"
                         outText = outText + "--------   --------  ------   ------   ---------   ----------    ---------   --------"
@@ -228,7 +227,7 @@ export default {
             })
             tau.vars.layout.html("main", processesForm);
         },
-        loadLoginForm:                      async function (  tau  ) {
+        loadLoginForm:                      async function (  tau  )                                    {
             tau.vars.passwordForm = new w2form({
                 name: 'passwordForm',
                 fields: [
@@ -275,7 +274,7 @@ export default {
             });
             tau.vars.layout.html("main", tau.vars.passwordForm);
         },
-        loadHomeForm:                       async function (  tau  ) {
+        loadHomeForm:                       async function (  tau  )                                    {
             tau.vars.layout.html("main", "<h1>Welcome to the trading app! </h1>");
         },
         loadPositionsForm:                  async function (  tau  )                                    {
@@ -324,7 +323,7 @@ export default {
             }
         }
     },
-    main:                                   async function              (  )                            {
+    main:                                   async function (  )                                         {
         let tau = this
         //debugger
         await tau.server.loadInitSettings(tau)
