@@ -521,7 +521,24 @@ let tas = {
                 ["TRUE",cookie])
         },
         browserRequests:    {
-            a: async function                                           (  tas  )           {
+            loginRequest: async function (req, res, next) {
+                let cookie = req.cookies.tradingapp;
+
+                let enteredPassword    = req.query.password
+                console.log("enteredPassword: " + enteredPassword)
+                let actualPassword = config.web.website_password
+
+                let retVal = {}
+                if (enteredPassword == actualPassword) {
+                    retVal.loggedIn = true
+                    await tas.server.setUserLoggedIn(cookie)
+                } else {
+                    retVal.error = "Invalid password"
+                }
+
+                //let listOfHashes = await yz.getReleasedHashesAfterTimestamp( dbsearch  ,  maxMasterMillis )
+                res.writeHead(200, {'Content-Type': 'application/json'});
+                res.end(JSON.stringify(retVal));
             }
 
         },
@@ -596,13 +613,6 @@ let tas = {
             tas.vars.debugMode = config.system.debug
         }
 
-        //await tas.screen.createScreen()
-        //await tas.screen.createBoxes()
-        //await tas.screen.changeMode()
-
-        //expressApp.get('/', (req, res) => {
-        //    res.send('Hello World!')
-        //})
         app.use(cookieParser());
         app.use(tas.server.setHttpHeader);
 
@@ -620,25 +630,7 @@ let tas = {
         app.use('/js', express.static(path.join(__dirname, 'js')));
         //process.exit()
 
-        app.get(    '/login',                 async function (req, res, next) {
-            let cookie = req.cookies.tradingapp;
-
-            let enteredPassword    = req.query.password
-            console.log("enteredPassword: " + enteredPassword)
-            let actualPassword = config.web.website_password
-
-            let retVal = {}
-            if (enteredPassword == actualPassword) {
-                retVal.loggedIn = true
-                await tas.server.setUserLoggedIn(cookie)
-            } else {
-                retVal.error = "Invalid password"
-            }
-
-            //let listOfHashes = await yz.getReleasedHashesAfterTimestamp( dbsearch  ,  maxMasterMillis )
-            res.writeHead(200, {'Content-Type': 'application/json'});
-            res.end(JSON.stringify(retVal));
-        })
+        app.get(    '/login',                 tas.server.browserRequests.loginRequest)
 
 
         app.get(    '/get_init_settings',                 async function (req, res, next) {
