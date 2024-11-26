@@ -503,12 +503,12 @@ let tas = {
         }
     },
     server:     {
-        createCookieInDb: async function                          (  cookie ) {
+        createCookieInDb:   async function                              (  cookie )     {
             //stmtInsertCookie.run(uuidv1(),timestampNow,"yazz",cookie,newSessionid, hostCookieSentTo, from_device_type)
             await tas.vars.dbConnection.query("insert into   cookies  (cookie_name, cookie_value)  values  ($1,$2)",
                 ["tradingapp",cookie])
         },
-        getCookieRecord: async function                           (  cookie  ) {
+        getCookieRecord:    async function                              (  cookie  )    {
             let res = await tas.vars.dbConnection.query("select * from cookies  where cookie_value = $1",
                 [cookie])
             if (res.rows.length > 0) {
@@ -516,28 +516,16 @@ let tas = {
             }
             return null
         },
-        setUserLoggedIn: async function                           (  cookie  ) {
+        setUserLoggedIn:    async function                              (  cookie  )    {
             await tas.vars.dbConnection.query("update cookies set logged_in = $1 where cookie_value = $2",
                 ["TRUE",cookie])
-        }
-    },
-    main:               async function  (  ) {
-        let tas = this
-        tas.vars.dbConnection = await tr.helpers.connectDb(config)
-        if (config.system) {
-            tas.vars.debugMode = config.system.debug
-        }
+        },
+        browserRequests:    {
+            a: async function                                           (  tas  )           {
+            }
 
-        //await tas.screen.createScreen()
-        //await tas.screen.createBoxes()
-        //await tas.screen.changeMode()
-
-        //expressApp.get('/', (req, res) => {
-        //    res.send('Hello World!')
-        //})
-        app.use(cookieParser());
-
-        app.use(async function (req, res, next) {
+        },
+        setHttpHeader:      async function                              (req, res, next)    {
             console.log("In app.use(async function (req, res, next) {")
             let oneof = false;
             if(req.headers.origin) {
@@ -599,7 +587,24 @@ let tas = {
 
             // Pass to next layer of middleware
             next();
-        });
+        }
+    },
+    main:               async function  (  ) {
+        let tas = this
+        tas.vars.dbConnection = await tr.helpers.connectDb(config)
+        if (config.system) {
+            tas.vars.debugMode = config.system.debug
+        }
+
+        //await tas.screen.createScreen()
+        //await tas.screen.createBoxes()
+        //await tas.screen.changeMode()
+
+        //expressApp.get('/', (req, res) => {
+        //    res.send('Hello World!')
+        //})
+        app.use(cookieParser());
+        app.use(tas.server.setHttpHeader);
 
         app.listen(port, () => {
             console.log(`Example app listening on port ${port}`)
