@@ -16,8 +16,8 @@ let tas = {
     vars:       {
         dbConnection:           null,
         processes:              {
-            getprices:              {processHandle: null, status: null, fileName: "get_prices.js"   , runOnStartup: false},
-            dotrades:               {processHandle: null, status: null, fileName: "trade.js"        , runOnStartup: false}
+            getprices:              {processHandle: null, status: null, fileName: "get_prices.js"   , runOnStartup: true},
+            dotrades:               {processHandle: null, status: null, fileName: "trade.js"        , runOnStartup: true}
         },
         debugMode:              null
     },
@@ -147,7 +147,7 @@ let tas = {
                     let process = tas.vars.processes[processName]
                     processes.push({
                         name:   process.fileName,
-                        status: null
+                        status:  process.status
                     })
                 }
 
