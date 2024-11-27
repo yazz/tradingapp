@@ -16,12 +16,6 @@ const config                = JSON.parse(fs.readFileSync('config.json', 'utf8'))
 
 let tas = {
     vars:       {
-        screen:                 null,
-        uiTableOfNames:         null,
-        uiPaneTop:              null,
-        uiPaneLeftMenu:         null,
-        uiPaneMain:             null,
-        uiMode:                 {},
         dbConnection:           null,
         processes:              {
             getprices:              {processHandle: null, status: null, fileName: "get_prices.js"   , runOnStartup: false},
